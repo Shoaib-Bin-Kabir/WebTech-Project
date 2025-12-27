@@ -30,7 +30,7 @@ $userType = $_SESSION['user_type'];
      <div>
     <nav>
         <ul>
-            <li><a href="Home Page.php">Home Page</a></li>|
+            <li><a href="SHomePage.php">Home Page</a></li>
             <li><a href="profile.php">Profile</a></li>
             <li><a href="addProduct.php">Add Product</a></li>
             <li><a href="History.php">History</a></li>

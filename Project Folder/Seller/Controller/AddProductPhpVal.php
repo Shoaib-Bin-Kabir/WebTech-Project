@@ -79,7 +79,7 @@ if (count($errors) > 0) {
     exit();
 }
 
-$uploadDir = '../Photos/';
+$uploadDir = '../../Product Photos/';
 
 
 if (!file_exists($uploadDir)) {
@@ -111,7 +111,7 @@ $category = $_POST['pdesc'];
 $price = floatval($_POST['pprice']);
 $quantity = intval($_POST['pquantity']);
 
-$photoPath = 'Seller/Photos/' . $fileName;
+$photoPath = 'Product Photos/' . $fileName;
 
 $result = $db->insertProduct($connection, $sellerEmail, $productName, $category, $price, $quantity, $photoPath);
 

@@ -58,16 +58,18 @@ $userType = $_SESSION['user_type'];
         </tr>
         
         <tr>
-        
-                 <td colspan="2"><input type="submit" value="Edit Profile"></td>
-            
+          <td colspan="2">
+                <button onclick="window.location.href='profile.php'">Edit Profile</button>
+           </td>
         </tr>
 
         <tr>
-        
-                 <td colspan="2"><input type="submit" value="Logout"></td>
-            
-        </tr>        
+          <td colspan="2">
+             <a href="../../Login and Signup/Controller/logout.php">
+                 <button>Logout</button>
+             </a>
+          </td>
+       </tr>     
 
 
 
