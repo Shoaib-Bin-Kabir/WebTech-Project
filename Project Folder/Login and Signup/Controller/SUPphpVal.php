@@ -20,9 +20,24 @@ $errors = [];
 
 if (!$email) {
     $errors['email'] = 'Email is required';
+} elseif (strpos($email, '@') === false || strpos($email, '.') === false) {
+    $errors['email'] = 'Email must contain @ and .';
 }
+
 if (!$password) {
     $errors['password'] = 'Password is required';
+} elseif (strlen($password) < 4) {
+    $errors['password'] = 'Password must be at least 4 characters';
+} else {
+    $hasNum = false;
+    $hasAlpha = false;
+    for ($i = 0; $i < strlen($password); $i++) {
+        if (ctype_digit($password[$i])) $hasNum = true;
+        if (ctype_alpha($password[$i])) $hasAlpha = true;
+    }
+    if (!$hasNum || !$hasAlpha) {
+        $errors['password'] = 'Password must contain both letters and numbers';
+    }
 }
 
 if (!$confirmPassword) {
