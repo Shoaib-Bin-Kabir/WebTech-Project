@@ -2,7 +2,15 @@
 session_start();
 
 if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
-    header('Location: ./dashboard.php');
+    $userType = $_SESSION['user_type'] ?? 'Customer';
+    
+    if ($userType === 'Admin') {
+        header('Location: ../../Admin/View/AHomePage.php');
+    } elseif ($userType === 'Seller') {
+        header('Location: ../../Seller/View/SHomePage.php');
+    } else {
+        header('Location: ./Dashboard.php');
+    }
     exit();
 }
 

@@ -20,31 +20,21 @@ class DBConnectr {
     }
 
     function checkProductNameExists($connection, $sellerEmail, $productName) {
-        $sellerEmail = $connection->real_escape_string($sellerEmail);
-        $productName = $connection->real_escape_string($productName);
-        
-        $sql = "SELECT * FROM products WHERE seller_email = '" . $sellerEmail . "' AND product_name = '" . $productName . "'";
-        $result = $connection->query($sql);
-        
-        return $result;
-    }
+       $sql = "SELECT * FROM products WHERE seller_email = ? AND product_name = ?";
+       $stmt = $connection->prepare($sql);
+       $stmt->bind_param("ss", $sellerEmail, $productName);
+       $stmt->execute();
+       $result = $stmt->get_result();
+       return $result;
+     }
 
     function insertProduct($connection, $sellerEmail, $productName, $category, $price, $quantity, $photoPath) {
-        $sellerEmail = $connection->real_escape_string($sellerEmail);
-        $productName = $connection->real_escape_string($productName);
-        $category = $connection->real_escape_string($category);
-        $price = $connection->real_escape_string($price);
-        $quantity = $connection->real_escape_string($quantity);
-        $photoPath = $connection->real_escape_string($photoPath);
-        
         $sql = "INSERT INTO products (seller_email, product_name, product_category, product_price, product_quantity, product_photo) 
-                VALUES ('" . $sellerEmail . "', '" . $productName . "', '" . $category . "', '" . $price . "', '" . $quantity . "', '" . $photoPath . "')";
-        
-        if ($connection->query($sql) === TRUE) {
-            return true;
-        } else {
-            return false;
-        }
+            VALUES (?, ?, ?, ?, ?, ?)";
+      $stmt = $connection->prepare($sql);
+      $stmt->bind_param("ssssds", $sellerEmail, $productName, $category, $price, $quantity, $photoPath);
+      $result = $stmt->execute();
+      return $result;
     }
 }
 ?>

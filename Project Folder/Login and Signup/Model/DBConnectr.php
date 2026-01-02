@@ -62,7 +62,7 @@ class DBConnectr {
     
     // Function 4: Insert new user (Sign Up)
     function insertUser($connection, $email, $password) {
-        $password = $this->caesarCipher($password, 5);
+        //$password = $this->caesarCipher($password, 5);
         
         $email = $connection->real_escape_string($email);
         $password = $connection->real_escape_string($password);
@@ -81,7 +81,7 @@ class DBConnectr {
     
     // Function 5: Get user by email and password (for login)
     function getUserByEmail($connection, $email, $password) {
-        $password = $this->caesarCipher($password, 5);
+        //$password = $this->caesarCipher($password, 5);
         
         $email = $connection->real_escape_string($email);
         $password = $connection->real_escape_string($password);
