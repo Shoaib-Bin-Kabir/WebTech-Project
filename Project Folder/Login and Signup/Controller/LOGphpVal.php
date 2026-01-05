@@ -49,8 +49,7 @@ if ($result->num_rows > 0) {
    $db->closeConnection($connection);
 
     if ($userType === 'Customer') {
-        header('Location: ../View/Dashboard.php');
-        exit();
+        header('Location: ../../Customer/View/dashboard.php');
     
     } 
     elseif ($userType === 'Admin') {

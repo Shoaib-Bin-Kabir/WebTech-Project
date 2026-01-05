@@ -91,6 +91,28 @@ class DBConnectr {
         
         return $result;
     }
+    
+    // Function 6: Insert customer into Customer table
+    function insertCustomer($connection, $loginID, $email, $password, $name, $phone, $nid, $photo) {
+        $loginID = $connection->real_escape_string($loginID);
+        $email = $connection->real_escape_string($email);
+        $password = $connection->real_escape_string($password);
+        $name = $connection->real_escape_string($name);
+        $phone = $connection->real_escape_string($phone);
+        $nid = $connection->real_escape_string($nid);
+        $photo = $connection->real_escape_string($photo);
+        
+        $sql = "INSERT INTO Customer (ID, Email, Password, Name, Phone_Number, NID, Photo) 
+                VALUES ('" . $loginID . "', '" . $email . "', '" . $password . "', '" . $name . "', '" . $phone . "', '" . $nid . "', '" . $photo . "')";
+        
+        $result = $connection->query($sql);
+        
+        if (!$result) {
+            die("Customer insert failed: " . $connection->error);
+        }
+        
+        return $result;
+    }
 }
 
 ?>

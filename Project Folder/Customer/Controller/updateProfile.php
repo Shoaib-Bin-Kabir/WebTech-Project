@@ -2,55 +2,29 @@
 
 session_start();
 
+// Check if user is logged in
+if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['user_type'] !== 'Customer') {
+    header('Location: ../../Login and Signup/View/login.php');
+    exit();
+}
+
 include "../Model/DBConnectr.php";
 
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-$email = $_POST['email'] ?? '';
-$password = $_POST['password'] ?? '';
-$confirmPassword = $_POST['confirm_password'] ?? '';
+// Get form data
 $name = $_POST['name'] ?? '';
 $phone = $_POST['phone'] ?? '';
 $nid = $_POST['nid'] ?? '';
 
 unset($_SESSION['errors']);
+unset($_SESSION['successMessage']);
 unset($_SESSION['previousValues']);
-
 
 $errors = [];
 
-
-if (!$email) {
-    $errors['email'] = 'Email is required';
-} elseif (strpos($email, '@') === false || strpos($email, '.') === false) {
-    $errors['email'] = 'Email must contain @ and .';
-}
-
-if (!$password) {
-    $errors['password'] = 'Password is required';
-} elseif (strlen($password) < 4) {
-    $errors['password'] = 'Password must be at least 4 characters';
-} else {
-    $hasNum = false;
-    $hasAlpha = false;
-    for ($i = 0; $i < strlen($password); $i++) {
-        if (ctype_digit($password[$i])) $hasNum = true;
-        if (ctype_alpha($password[$i])) $hasAlpha = true;
-    }
-    if (!$hasNum || !$hasAlpha) {
-        $errors['password'] = 'Password must contain both letters and numbers';
-    }
-}
-
-if (!$confirmPassword) {
-    $errors['confirmPassword'] = 'Confirm Password is required';
-}
-
-if ($password !== $confirmPassword) {
-    $errors['confirmPassword'] = 'Passwords do not match';
-}
-
+// Validation
 if (empty($name)) {
     $errors['name'] = 'Name is required';
 } elseif (strlen($name) < 2) {
@@ -72,7 +46,7 @@ if (empty($nid)) {
 }
 
 // Handle photo upload
-$photoPath = '';
+$photoPath = null;
 if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE) {
     if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
@@ -104,49 +78,39 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE)
     }
 }
 
+// If validation failed, redirect back
 if (count($errors) > 0) {
     $_SESSION['errors'] = $errors;
-    $_SESSION['previousValues'] = ['email' => $email, 'name' => $name, 'phone' => $phone, 'nid' => $nid];
-    header('Location: ../View/signup.php');
+    $_SESSION['previousValues'] = ['name' => $name, 'phone' => $phone, 'nid' => $nid];
+    header('Location: ../View/editProfile.php');
     exit();
 }
 
-
-
+// Update customer
 $db = new DBConnectr();
 $connection = $db->openConnection();
 
-$existingUser = $db->checkEmailExists($connection, $email);
+$email = $_SESSION['email'];
+$result = $db->getCustomerByEmail($connection, $email);
+$customer = $result->fetch_assoc();
+$customerID = $customer['ID'];
 
-if ($existingUser->num_rows > 0) {
-    $_SESSION['signupErr'] = 'This email is already registered';
-    $_SESSION['previousValues'] = ['email' => $email];
-    header('Location: ../View/signup.php');
-    exit();
-}
+$updateResult = $db->updateCustomer($connection, $customerID, $name, $phone, $nid);
 
-
-$result = $db->insertUser($connection, $email, $password);
-
-if ($result) {
-    // Get the newly created Login ID
-    $loginID = $connection->insert_id;
-    
-    // Encrypt password for Customer table (same as Login)
-    $encryptedPassword = $db->caesarCipher($password, 5);
-    
-    // Insert into Customer table
-    $db->insertCustomer($connection, $loginID, $email, $encryptedPassword, $name, $phone, $nid, $photoPath);
-    
-    $_SESSION['signupSuccess'] = 'Account created successfully! Please login.';
-    header('Location: ../View/login.php');
-} else {
-    $_SESSION['signupErr'] = 'Something went wrong. Please try again.';
-    $_SESSION['previousValues'] = ['email' => $email, 'name' => $name, 'phone' => $phone, 'nid' => $nid];
-    header('Location: ../View/signup.php');
+if ($photoPath !== null) {
+    $db->updateCustomerPhoto($connection, $customerID, $photoPath);
 }
 
 $db->closeConnection($connection);
 
+if ($updateResult) {
+    $_SESSION['successMessage'] = 'Profile updated successfully!';
+} else {
+    $_SESSION['errors'] = ['general' => 'Failed to update profile'];
+    $_SESSION['previousValues'] = ['name' => $name, 'phone' => $phone, 'nid' => $nid];
+}
+
+header('Location: ../View/editProfile.php');
+exit();
 
 ?>
