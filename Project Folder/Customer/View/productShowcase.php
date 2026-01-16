@@ -1,6 +1,4 @@
 <?php
-// Include-style file.
-// Expects: $products = [ [product_name, product_category, product_price, product_quantity, product_photo], ... ]
 
 if (!isset($products) || !is_array($products)) {
     $products = [];
@@ -52,13 +50,17 @@ $selectedCategory = $selectedCategory ?? '';
         <noscript>
             <button type="submit" class="product-filter-btn">Apply</button>
         </noscript>
+
+        <label for="searchText" class="product-filter-label">Search:</label>
+        <input type="text" id="searchText" class="product-filter-select" placeholder="Search by name" onkeyup="searchProduct()">
     </form>
 
-    <?php if (count($products) === 0): ?>
-        <p class="products-empty">No products found.</p>
-    <?php else: ?>
-        <div class="products-grid">
-            <?php foreach ($products as $product): ?>
+    <div id="productResult">
+        <?php if (count($products) === 0): ?>
+            <p class="products-empty">No products found.</p>
+        <?php else: ?>
+            <div class="products-grid">
+                <?php foreach ($products as $product): ?>
                 <?php
                     $name = $product['product_name'] ?? 'Unnamed';
                     $category = $product['product_category'] ?? '';
@@ -102,7 +104,10 @@ $selectedCategory = $selectedCategory ?? '';
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
+
+<script src="../Controller/searchProduct.js"></script>

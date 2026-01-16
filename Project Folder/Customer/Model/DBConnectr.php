@@ -78,17 +78,23 @@ class DBConnectr {
             return $connection->query($sql);
         }
 
-        $sql = "SELECT product_name, product_category, product_price, product_quantity, product_photo FROM products WHERE product_category = ?";
-        $stmt = $connection->prepare($sql);
-        if (!$stmt) {
-            return false;
+        $category = $connection->real_escape_string($category);
+        $sql = "SELECT product_name, product_category, product_price, product_quantity, product_photo FROM products WHERE product_category = '" . $category . "'";
+        return $connection->query($sql);
+    }
+
+    // Search only by product name
+    function searchProducts($connection, $q = '') {
+        $q = ($q === null) ? '' : trim($q);
+
+        if ($q === '') {
+            $sql = "SELECT product_name, product_category, product_price, product_quantity, product_photo FROM products";
+            return $connection->query($sql);
         }
 
-        $stmt->bind_param("s", $category);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $stmt->close();
-        return $result;
+        $q = $connection->real_escape_string($q);
+        $sql = "SELECT product_name, product_category, product_price, product_quantity, product_photo FROM products WHERE product_name LIKE '" . $q . "%'";
+        return $connection->query($sql);
     }
 }
 
