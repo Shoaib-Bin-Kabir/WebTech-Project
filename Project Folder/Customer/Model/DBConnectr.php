@@ -70,6 +70,26 @@ class DBConnectr {
         
         return $result;
     }
+
+    // Get products for customer dashboard (optionally by category)
+    function getAllProducts($connection, $category = '') {
+        if ($category === '' || $category === null) {
+            $sql = "SELECT product_name, product_category, product_price, product_quantity, product_photo FROM products";
+            return $connection->query($sql);
+        }
+
+        $sql = "SELECT product_name, product_category, product_price, product_quantity, product_photo FROM products WHERE product_category = ?";
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("s", $category);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
 }
 
 ?>

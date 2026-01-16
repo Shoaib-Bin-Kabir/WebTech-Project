@@ -19,9 +19,21 @@ $connection = $db->openConnection();
 
 $email = $_SESSION['email'];
 
+// Category filter (empty means All)
+$selectedCategory = isset($_GET['category']) ? trim($_GET['category']) : '';
+
 // Get customer data
 $result = $db->getCustomerByEmail($connection, $email);
 $customer = $result->fetch_assoc();
+
+// Get product data
+$products = [];
+$productsResult = $db->getAllProducts($connection, $selectedCategory);
+if ($productsResult) {
+    while ($row = $productsResult->fetch_assoc()) {
+        $products[] = $row;
+    }
+}
 
 $db->closeConnection($connection);
 
@@ -44,7 +56,7 @@ unset($_SESSION['previousValues']);
 <html>
 <head>
     <title>Customer Dashboard</title>
-    <link rel="stylesheet" href="Design/dashboard.css">
+    <link rel="stylesheet" href="Design/dashboard.css?v=2">
 </head>
 <body>
     <div class="container">
@@ -102,10 +114,7 @@ unset($_SESSION['previousValues']);
                 <p>Explore our products and find what you need</p>
             </div>
 
-            <div class="products-section">
-                <h2 style="color: #2c3e50; margin-bottom: 10px;">Products Coming Soon</h2>
-                <p>This section will display available products for you to browse and purchase.</p>
-            </div>
+            <?php include __DIR__ . '/productShowcase.php'; ?>
         </div>
     </div>
 </body>
