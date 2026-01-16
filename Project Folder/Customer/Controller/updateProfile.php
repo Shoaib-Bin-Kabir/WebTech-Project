@@ -17,6 +17,7 @@ ini_set("display_errors", 1);
 $name = $_POST['name'] ?? '';
 $phone = $_POST['phone'] ?? '';
 $nid = $_POST['nid'] ?? '';
+$removePhotoRequested = isset($_POST['remove_photo']) && $_POST['remove_photo'] === '1';
 
 unset($_SESSION['errors']);
 unset($_SESSION['successMessage']);
@@ -82,7 +83,7 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE)
 if (count($errors) > 0) {
     $_SESSION['errors'] = $errors;
     $_SESSION['previousValues'] = ['name' => $name, 'phone' => $phone, 'nid' => $nid];
-    header('Location: ../View/editProfile.php');
+    header('Location: ../View/dashboard.php?edit=1');
     exit();
 }
 
@@ -94,11 +95,30 @@ $email = $_SESSION['email'];
 $result = $db->getCustomerByEmail($connection, $email);
 $customer = $result->fetch_assoc();
 $customerID = $customer['ID'];
+$currentPhotoPath = $customer['Photo'] ?? '';
 
 $updateResult = $db->updateCustomer($connection, $customerID, $name, $phone, $nid);
 
 if ($photoPath !== null) {
     $db->updateCustomerPhoto($connection, $customerID, $photoPath);
+
+    if (!empty($currentPhotoPath) && $currentPhotoPath !== $photoPath) {
+        $uploadsDir = realpath(__DIR__ . '/../Uploads');
+        $oldFile = realpath(__DIR__ . '/../' . ltrim($currentPhotoPath, '/'));
+        if ($uploadsDir && $oldFile && str_starts_with($oldFile, $uploadsDir . DIRECTORY_SEPARATOR) && is_file($oldFile)) {
+            @unlink($oldFile);
+        }
+    }
+} elseif ($removePhotoRequested) {
+    $db->updateCustomerPhoto($connection, $customerID, '');
+
+    if (!empty($currentPhotoPath)) {
+        $uploadsDir = realpath(__DIR__ . '/../Uploads');
+        $oldFile = realpath(__DIR__ . '/../' . ltrim($currentPhotoPath, '/'));
+        if ($uploadsDir && $oldFile && str_starts_with($oldFile, $uploadsDir . DIRECTORY_SEPARATOR) && is_file($oldFile)) {
+            @unlink($oldFile);
+        }
+    }
 }
 
 $db->closeConnection($connection);
@@ -110,7 +130,7 @@ if ($updateResult) {
     $_SESSION['previousValues'] = ['name' => $name, 'phone' => $phone, 'nid' => $nid];
 }
 
-header('Location: ../View/editProfile.php');
+header('Location: ../View/dashboard.php?edit=1');
 exit();
 
 ?>
