@@ -3,14 +3,14 @@ session_start();
 
 // Check if user is logged in
 if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
-    // Not logged in, send back to login
+   
     header('Location: ../../Login and Signup/View/login.php');
     exit();
 }
 
 // Check if user is a Seller
 if ($_SESSION['user_type'] !== 'Seller') {
-    // Not a Seller - redirect to login
+   
     header('Location: ../../Login and Signup/View/login.php');
     exit();
 }

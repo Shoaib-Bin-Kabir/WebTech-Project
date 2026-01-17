@@ -2,17 +2,17 @@
 session_start();
 
 
-/*if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
+if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
     header('Location: ../../Login and Signup/View/login.php');
     exit();
 }
 
 
-/*if ($_SESSION['user_type'] !== 'Admin') {
+if ($_SESSION['user_type'] !== 'Admin') {
    
-    header('Location: ../../Login and Signup/View/Dashboard.php');
+    header('Location: ../../Login and Signup/View/login.php');
     exit();
-}*/
+}
 
 $userEmail = $_SESSION['email'];
 $userType = $_SESSION['user_type'];

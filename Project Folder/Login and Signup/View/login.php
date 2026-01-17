@@ -9,7 +9,7 @@ if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
     } elseif ($userType === 'Seller') {
         header('Location: ../../Seller/View/SHomePage.php');
     } else {
-        header('Location: ./Dashboard.php');
+        header('Location: ./login.php');
     }
     exit();
 }

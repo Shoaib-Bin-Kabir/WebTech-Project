@@ -11,7 +11,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
 // Check if user is a Seller (not a Customer)
 if ($_SESSION['user_type'] !== 'Seller') {
     // Customer trying to access seller pages - redirect them
-    header('Location: ../../Login and Signup/View/Dashboard.php');
+     header('Location: ../../Login and Signup/View/login.php');
     exit();
 }
 

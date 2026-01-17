@@ -7,7 +7,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
 }
 
 if ($_SESSION['user_type'] !== 'Seller') {
-    header('Location: ../../Login and Signup/View/Dashboard.php');
+     header('Location: ../../Login and Signup/View/login.php');
     exit();
 }
 

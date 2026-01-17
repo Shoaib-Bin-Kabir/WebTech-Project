@@ -86,6 +86,62 @@ class DBConnectr {
     }
     
     
+function getAdminByEmail($connection, $email) {
+    $email = $connection->real_escape_string($email);
+    $sql = "SELECT * FROM Admin WHERE Email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    return $result;
+}
+
+function updateAdminName($connection, $email, $name) {
+    $sql = "UPDATE Admin SET Name = ? WHERE Email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ss", $name, $email);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+function updateAdminNID($connection, $email, $nid) {
+    $sql = "UPDATE Admin SET NID = ? WHERE Email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ss", $nid, $email);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+function updateAdminEmail($connection, $oldEmail, $newEmail) {
+    $sql = "UPDATE Admin SET Email = ? WHERE Email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ss", $newEmail, $oldEmail);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+function updateAdminPhone($connection, $email, $phone) {
+    $sql = "UPDATE Admin SET Phone_Number = ? WHERE Email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ss", $phone, $email);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+function updateAdminPhoto($connection, $email, $photoPath) {
+    $sql = "UPDATE Admin SET Photo = ? WHERE Email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ss", $photoPath, $email);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+    
 }
 
 ?>
