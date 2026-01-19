@@ -34,11 +34,14 @@ if (count($products) === 0) {
 
 echo '<div class="products-grid">';
 foreach ($products as $product) {
+    $productId = $product['id'] ?? 0;
     $name = $product['product_name'] ?? 'Unnamed';
     $cat = $product['product_category'] ?? '';
     $price = $product['product_price'] ?? '';
     $qty = $product['product_quantity'] ?? '';
     $photo = $product['product_photo'] ?? '';
+
+    $isOutOfStock = ($qty !== '' && is_numeric($qty) && (int) $qty <= 0);
 
     $hasValidPhoto = false;
     if (!empty($photo)) {
@@ -67,13 +70,16 @@ foreach ($products as $product) {
         echo '<div><span class="meta-label">Price:</span> ' . htmlspecialchars($price) . '</div>';
     }
     if ($qty !== '') {
-        echo '<div><span class="meta-label">Stock:</span> ' . htmlspecialchars($qty) . '</div>';
+        echo '<div><span class="meta-label">Stock:</span> ' . ($isOutOfStock ? 'Not available' : htmlspecialchars($qty)) . '</div>';
     }
     echo '</div>';
 
     echo '<div class="product-actions">';
-    echo '<button type="button" class="product-btn btn-cart">Add to Cart</button>';
-    echo '<button type="button" class="product-btn btn-buy">Buy Now</button>';
+    echo '<form method="post" action="../Controller/addToCart.php" style="flex: 1;">';
+    echo '<input type="hidden" name="product_id" value="' . (int) $productId . '">';
+    echo '<button type="submit" class="product-btn btn-cart"' . ($isOutOfStock ? ' disabled title="Not available"' : '') . '>Add to Cart</button>';
+    echo '</form>';
+    echo '<button type="button" class="product-btn btn-buy"' . ($isOutOfStock ? ' disabled title="Not available"' : '') . '>Buy Now</button>';
     echo '</div>';
 
     echo '</div>';

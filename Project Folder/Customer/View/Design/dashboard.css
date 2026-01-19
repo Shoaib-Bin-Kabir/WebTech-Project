@@ -70,27 +70,27 @@ body {
 
 .info-section h3 {
     font-size: 16px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     color: #3498db;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .info-item {
-    margin-bottom: 12px;
-    padding: 10px;
-    background-color: #34495e;
-    border-radius: 5px;
+    margin-bottom: 6px;
+    padding: 6px 0;
+    background-color: transparent;
+    border-radius: 0;
 }
 
 .info-label {
-    font-size: 12px;
+    font-size: 13px;
     color: #95a5a6;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 .info-value {
-    font-size: 14px;
+    font-size: 16px;
     color: #ecf0f1;
 }
 
@@ -134,6 +134,17 @@ body {
     flex: 1;
     padding: 30px;
     overflow-y: auto;
+}
+
+.actions-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.actions-row .action-btn {
+    width: 50%;
+    margin-bottom: 0;
 }
 
 .main-header {
@@ -199,11 +210,11 @@ body {
 }
 
 .products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 18px;
-    justify-content: start;
-    justify-items: start;
+    justify-content: flex-start;
+    align-items: stretch;
 }
 
 .product-card {
@@ -277,6 +288,10 @@ body {
     margin-top: auto;
 }
 
+.product-actions form {
+    display: flex;
+}
+
 .product-btn {
     flex: 1;
     padding: 8px;
@@ -287,6 +302,11 @@ body {
     font-weight: 600;
     background: #efefef;
     color: #2c3e50;
+}
+
+.product-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .btn-cart {
