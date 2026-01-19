@@ -26,6 +26,8 @@ $selectedCategory = isset($_GET['category']) ? trim($_GET['category']) : '';
 $result = $db->getCustomerByEmail($connection, $email);
 $customer = $result->fetch_assoc();
 
+$customerId = (int) (($customer['ID'] ?? $customer['LoginID'] ?? 0));
+
 // Get product data
 $products = [];
 $productsResult = $db->getAllProducts($connection, $selectedCategory);
@@ -34,6 +36,8 @@ if ($productsResult) {
         $products[] = $row;
     }
 }
+
+$cartCount = ($customerId > 0) ? $db->getCartItemCount($connection, $customerId) : 0;
 
 $db->closeConnection($connection);
 
@@ -102,7 +106,12 @@ unset($_SESSION['previousValues']);
             </div>
 
             <div class="actions-section">
-                <a href="dashboard.php?edit=1" class="action-btn <?php echo $isEditing ? 'active' : ''; ?>">Edit Profile</a>
+                <div class="actions-row">
+                    <a href="dashboard.php?edit=1" class="action-btn <?php echo $isEditing ? 'active' : ''; ?>">Edit Profile</a>
+                    <a href="dashboard.php" class="action-btn <?php echo !$isEditing ? 'active' : ''; ?>">Home</a>
+                </div>
+                <a href="cart.php" class="action-btn">Cart (<?php echo (int) $cartCount; ?>)</a>
+                <a href="orderHistory.php" class="action-btn">Order History</a>
                 <a href="../../Login and Signup/Controller/logout.php" class="action-btn logout">Logout</a>
             </div>
         </div>

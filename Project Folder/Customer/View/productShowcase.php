@@ -62,11 +62,14 @@ $selectedCategory = $selectedCategory ?? '';
             <div class="products-grid">
                 <?php foreach ($products as $product): ?>
                 <?php
+                    $productId = $product['id'] ?? 0;
                     $name = $product['product_name'] ?? 'Unnamed';
                     $category = $product['product_category'] ?? '';
                     $price = $product['product_price'] ?? '';
                     $quantity = $product['product_quantity'] ?? '';
                     $photo = $product['product_photo'] ?? '';
+
+                    $isOutOfStock = ($quantity !== '' && is_numeric($quantity) && (int) $quantity <= 0);
 
                     $hasValidPhoto = false;
                     if (!empty($photo)) {
@@ -94,13 +97,16 @@ $selectedCategory = $selectedCategory ?? '';
                                 <div><span class="meta-label">Price:</span> <?php echo htmlspecialchars($price); ?></div>
                             <?php endif; ?>
                             <?php if ($quantity !== ''): ?>
-                                <div><span class="meta-label">Stock:</span> <?php echo htmlspecialchars($quantity); ?></div>
+                                <div><span class="meta-label">Stock:</span> <?php echo $isOutOfStock ? 'Not available' : htmlspecialchars($quantity); ?></div>
                             <?php endif; ?>
                         </div>
 
                         <div class="product-actions">
-                            <button type="button" class="product-btn btn-cart">Add to Cart</button>
-                            <button type="button" class="product-btn btn-buy">Buy Now</button>
+                            <form method="post" action="../Controller/addToCart.php" style="flex: 1;">
+                                <input type="hidden" name="product_id" value="<?php echo (int) $productId; ?>">
+                                <button type="submit" class="product-btn btn-cart" <?php echo $isOutOfStock ? 'disabled title="Not available"' : ''; ?>>Add to Cart</button>
+                            </form>
+                            <button type="button" class="product-btn btn-buy" <?php echo $isOutOfStock ? 'disabled title="Not available"' : ''; ?>>Buy Now</button>
                         </div>
                     </div>
                 </div>
