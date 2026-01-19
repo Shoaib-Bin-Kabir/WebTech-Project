@@ -36,6 +36,7 @@ unset($_SESSION['addSellerErr']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Seller Page</title>
     <script src="../Controller/JS/addSellJSval.php"></script>
+    <script src="../Controller/JS/sellerManage.js"></script>
 </head>
 <body>
     <h1>Manage Seller Page</h1>
@@ -88,6 +89,84 @@ unset($_SESSION['addSellerErr']);
         </form>
     </div>
 
+    <hr>
+
+    <h2>All Sellers</h2>
+    
+    <?php
+    if (isset($_SESSION['sellerError'])) {
+        echo '<p style="color: red;">' . htmlspecialchars($_SESSION['sellerError']) . '</p>';
+        unset($_SESSION['sellerError']);
+    }
+    if (isset($_SESSION['sellerSuccess'])) {
+        echo '<p style="color: green;">' . htmlspecialchars($_SESSION['sellerSuccess']) . '</p>';
+        unset($_SESSION['sellerSuccess']);
+    }
+    
+    include "../Model/DBConnectr.php";
+    $db = new DBConnectr();
+    $connection = $db->openConnection();
+    $sellers = $db->getAllSellers($connection);
+    $db->closeConnection($connection);
+    
+    if ($sellers->num_rows > 0):
+        while ($seller = $sellers->fetch_assoc()):
+            $formId = str_replace(['@', '.'], '_', $seller['Email']);
+    ?>
+        <div style="border: 1px solid #000; padding: 15px; margin: 10px 0;">
+            <table>
+                <tr>
+                    <td><strong>Seller Photo:</strong></td>
+                    <td>
+                        <?php if (!empty($seller['Photo']) && file_exists("../../Seller/" . $seller['Photo'])): ?>
+                            <img src="<?php echo htmlspecialchars("../../Seller/" . $seller['Photo']); ?>" width="100" height="100">
+                        <?php else: ?>
+                            <p>No photo</p>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><strong>Seller ID:</strong></td>
+                    <td><?php echo htmlspecialchars($seller['ID']); ?></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Email:</strong></td>
+                    <td><?php echo htmlspecialchars($seller['Email']); ?></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Name:</strong></td>
+                    <td><?php echo !empty($seller['Name']) ? htmlspecialchars($seller['Name']) : 'Not provided'; ?></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Phone:</strong></td>
+                    <td><?php echo !empty($seller['Phone_Number']) ? htmlspecialchars($seller['Phone_Number']) : 'Not provided'; ?></td>
+                </tr>
+
+                <tr>
+                    <td><strong>NID:</strong></td>
+                    <td><?php echo !empty($seller['NID']) ? htmlspecialchars($seller['NID']) : 'Not provided'; ?></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <form id="deleteSellerForm_<?php echo $formId; ?>" method="post" action="../Controller/deleteSeller.php" style="display: inline;">
+                            <input type="hidden" name="sellerEmail" value="<?php echo htmlspecialchars($seller['Email']); ?>">
+                        </form>
+                        <input type="button" value="Remove Seller" style="background-color: red; color: white;" onclick="confirmDeleteSeller('<?php echo htmlspecialchars($seller['Email']); ?>', '<?php echo htmlspecialchars($seller['Name'] ?? $seller['Email']); ?>')">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    <?php
+        endwhile;
+    else:
+    ?>
+        <p>No sellers found.</p>
+    <?php endif; ?>
    
 
 </body>

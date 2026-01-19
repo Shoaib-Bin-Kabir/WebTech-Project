@@ -1,70 +1,104 @@
 <?php
 ?>
 
-function valEmail(){
-    let email = document.getElementById('semail').value;
-    const emailpattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (email === '') {
-        document.getElementById('semailErr').innerHTML = 'Seller Email is required.';
+function valProductName(){
+    let productName = document.getElementById('pname').value;
+    if (productName === '') {
+        document.getElementById('pnameErr').innerHTML = 'Product Name is required.';
         return false;
     }
 
-    if (!emailpattern.test(email)) {
-        document.getElementById('semailErr').innerHTML = 'Invalid email format.';
+    if (productName.length < 3 ) {
+        document.getElementById('pnameErr').innerHTML = 'Product Name must be at least 3 characters long.';
         return false;
     }
 
     return true;
 }
 
-function valPassword(){
-    let password = document.getElementById('spassword').value;
+function valCategory(){
+    let category = document.getElementById('pdesc').value;
+    if (category === '') {
+        document.getElementById('pdescErr').innerHTML = 'Product Category is required.';
+        return false;
+    }
+
+    return true;
+}
+
+function valPrice(){
+    let price = document.getElementById('pprice').value;
+    if (price === '') {
+        document.getElementById('ppriceErr').innerHTML = 'Product Price is required.';
+        return false;
+    }
+
+    if (isNaN(price) || Number(price) <= 0) {
+        document.getElementById('ppriceErr').innerHTML = 'Product Price must be a positive number.';
+        return false;
+    }
+
+    return true;
+}
+
+function valQuantity(){
+    let quantity = document.getElementById('pquantity').value;
+    if (quantity === '') {
+        document.getElementById('pquantityErr').innerHTML = 'Product Quantity is required.';
+        return false;
+    }
+
+    if (!Number.isInteger(Number(quantity)) || Number(quantity) < 0) {
+        document.getElementById('pquantityErr').innerHTML = 'Product Quantity must be a non-negative integer.';
+        return false;
+    }
+
+    return true;
+}
+
+function valPhoto() {
+    let photo = document.getElementById('pPhoto').files[0];
     
-    if (password === '') {
-        document.getElementById('spasswordErr').innerHTML = 'Seller Password is required.';
+    if (!photo) {
+        document.getElementById('pPhotoErr').innerHTML = 'Product Photo is required';
         return false;
     }
-
-    if (password.length < 4) {
-        document.getElementById('spasswordErr').innerHTML = 'Password must be at least 4 characters long.';
+    
+    let allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(photo.type)) {
+        document.getElementById('pPhotoErr').innerHTML = 'Only JPG, JPEG, PNG, and GIF files are allowed';
         return false;
     }
-
-    let hasNum = false;
-    let hasAlpha = false;
-    for (let i = 0; i < password.length; i++) {
-        if (!isNaN(password[i]) && password[i] !== ' ') {
-            hasNum = true;
-        }
-        if (password[i].match(/[a-zA-Z]/)) {
-            hasAlpha = true;
-        }
-    }
-
-    if (!hasNum || !hasAlpha) {
-        document.getElementById('spasswordErr').innerHTML = 'Password must contain both letters and numbers.';
+    
+    if (photo.size > 5 * 1024 * 1024) {
+        document.getElementById('pPhotoErr').innerHTML = 'File size must be less than 5MB';
         return false;
     }
-
+    
     return true;
 }
 
 function clearErrors(){
-    document.getElementById('semailErr').innerHTML = '';
-    document.getElementById('spasswordErr').innerHTML = '';
+    document.getElementById('pnameErr').innerHTML = '';
+    document.getElementById('pdescErr').innerHTML = '';
+    document.getElementById('ppriceErr').innerHTML = '';
+    document.getElementById('pquantityErr').innerHTML = '';
+    document.getElementById('pPhotoErr').innerHTML = '';
 }
 
-function validateAddSeller(event){
+function validateAddProduct(event){
     clearErrors();
     event.preventDefault();
 
-    let isEmailValid = valEmail();
-    let isPasswordValid = valPassword();
+    let valid = true;
 
-    if (!isEmailValid || !isPasswordValid) {
-        return false;
+    if (!valProductName()) valid = false;
+    if (!valCategory()) valid = false;
+    if (!valPrice()) valid = false;
+    if (!valQuantity()) valid = false;
+    if (!valPhoto()) valid = false;
+
+    if (valid) {
+        document.querySelector('form').submit();
     }
-
-    document.querySelector('form').submit();
 }

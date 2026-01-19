@@ -91,5 +91,64 @@ function updateSellerPhoto($connection, $email, $photoPath) {
     $stmt->close();
     return $result;
 }
+
+
+function getAllProducts($connection) {
+    $sql = "SELECT * FROM products ORDER BY created_at DESC";
+    $stmt = $connection->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
+// Update product quantity (without seller check)
+function updateProductQuantityAll($connection, $productId, $newQuantity) {
+    $sql = "UPDATE products SET product_quantity = ? WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ii", $newQuantity, $productId);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+// Update product price (without seller check)
+function updateProductPriceAll($connection, $productId, $newPrice) {
+    $sql = "UPDATE products SET product_price = ? WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("di", $newPrice, $productId);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+// Update product photo (without seller check)
+function updateProductPhotoAll($connection, $productId, $newPhotoPath) {
+    $sql = "UPDATE products SET product_photo = ? WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("si", $newPhotoPath, $productId);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+// Get product by ID only (without seller check)
+function getProductByIdOnly($connection, $productId) {
+    $sql = "SELECT * FROM products WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("i", $productId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
+// Delete product (without seller check)
+function deleteProductAll($connection, $productId) {
+    $sql = "DELETE FROM products WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("i", $productId);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
 }
 ?>

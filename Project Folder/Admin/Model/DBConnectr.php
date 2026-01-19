@@ -141,7 +141,105 @@ function updateAdminPhoto($connection, $email, $photoPath) {
     $stmt->close();
     return $result;
 }
-    
+
+function checkProductNameExists($connection, $productName) {
+    $sql = "SELECT * FROM products WHERE product_name = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("s", $productName);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
+// Insert product (admin adds to shop inventory)
+function insertProduct($connection, $adminEmail, $productName, $category, $price, $quantity, $photoPath) {
+    $sql = "INSERT INTO products (seller_email, product_name, product_category, product_price, product_quantity, product_photo) 
+            VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("sssdis", $adminEmail, $productName, $category, $price, $quantity, $photoPath);
+    $result = $stmt->execute();
+    $stmt->close();
+    return $result;
+}
+
+function getAllProducts($connection) {
+    $sql = "SELECT * FROM products ORDER BY created_at DESC";
+    $result = $connection->query($sql);
+    return $result;
+}
+
+function getProductByIdOnly($connection, $productId) {
+    $sql = "SELECT * FROM products WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("i", $productId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
+function updateProductQuantityAll($connection, $productId, $newQuantity) {
+    $sql = "UPDATE products SET product_quantity = ? WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ii", $newQuantity, $productId);
+    $result = $stmt->execute();
+    return $result;
+}
+
+function updateProductPriceAll($connection, $productId, $newPrice) {
+    $sql = "UPDATE products SET product_price = ? WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("di", $newPrice, $productId);
+    $result = $stmt->execute();
+    return $result;
+}
+
+function updateProductPhotoAll($connection, $productId, $photoPath) {
+    $sql = "UPDATE products SET product_photo = ? WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("si", $photoPath, $productId);
+    $result = $stmt->execute();
+    return $result;
+}
+
+function deleteProductAll($connection, $productId) {
+    $sql = "DELETE FROM products WHERE id = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("i", $productId);
+    $result = $stmt->execute();
+    return $result;
+}
+
+function getAllSellers($connection) {
+    $sql = "SELECT * FROM Seller ORDER BY ID ASC";
+    $result = $connection->query($sql);
+    return $result;
+}
+
+function getSellerByEmail($connection, $email) {
+    $sql = "SELECT * FROM Seller WHERE Email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
+function deleteSellerFromLogin($connection, $email) {
+    $sql = "DELETE FROM Login WHERE email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $result = $stmt->execute();
+    return $result;
+}
+
+function deleteSellerFromSeller($connection, $email) {
+    $sql = "DELETE FROM Seller WHERE Email = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $result = $stmt->execute();
+    return $result;
+}
+
 }
 
 ?>
