@@ -38,8 +38,7 @@ class DBConnectr {
     }
 
     function getSellerByEmail($connection, $email) {
-      $email = $connection->real_escape_string($email);
-      $sql = "SELECT * FROM Seller WHERE Email = ?";
+            $sql = "SELECT * FROM seller WHERE Email = ?";
       $stmt = $connection->prepare($sql);
       $stmt->bind_param("s", $email);
       $stmt->execute();
@@ -48,7 +47,7 @@ class DBConnectr {
       return $result;
    }
    function updateSellerName($connection, $email, $name) {
-    $sql = "UPDATE Seller SET Name = ? WHERE Email = ?";
+    $sql = "UPDATE seller SET Name = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $name, $email);
     $result = $stmt->execute();
@@ -57,7 +56,7 @@ class DBConnectr {
 }
 
 function updateSellerNID($connection, $email, $nid) {
-    $sql = "UPDATE Seller SET NID = ? WHERE Email = ?";
+    $sql = "UPDATE seller SET NID = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $nid, $email);
     $result = $stmt->execute();
@@ -66,7 +65,7 @@ function updateSellerNID($connection, $email, $nid) {
 }
 
 function updateSellerEmail($connection, $oldEmail, $newEmail) {
-    $sql = "UPDATE Seller SET Email = ? WHERE Email = ?";
+    $sql = "UPDATE seller SET Email = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $newEmail, $oldEmail);
     $result = $stmt->execute();
@@ -75,7 +74,7 @@ function updateSellerEmail($connection, $oldEmail, $newEmail) {
 }
 
 function updateSellerPhone($connection, $email, $phone) {
-    $sql = "UPDATE Seller SET Phone_Number = ? WHERE Email = ?";
+    $sql = "UPDATE seller SET Phone_Number = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $phone, $email);
     $result = $stmt->execute();
@@ -84,7 +83,7 @@ function updateSellerPhone($connection, $email, $phone) {
 }
 
 function updateSellerPhoto($connection, $email, $photoPath) {
-    $sql = "UPDATE Seller SET Photo = ? WHERE Email = ?";
+    $sql = "UPDATE seller SET Photo = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $photoPath, $email);
     $result = $stmt->execute();

@@ -20,7 +20,15 @@ class DBConnectr {
     
     // Function 2: Close connection
     function closeConnection($connection) {
-        $connection->close();
+        if (!$connection) {
+            return;
+        }
+
+        try {
+            $connection->close();
+        } catch (Throwable $e) {
+            // Ignore: connection may already be closed.
+        }
     }
     
     // Function 3: Check if email already exists

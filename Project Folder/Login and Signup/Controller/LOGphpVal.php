@@ -50,6 +50,7 @@ if ($result->num_rows > 0) {
 
     if ($userType === 'Customer') {
         header('Location: ../../Customer/View/dashboard.php');
+        exit();
     
     } 
     elseif ($userType === 'Admin') {
@@ -67,7 +68,4 @@ if ($result->num_rows > 0) {
     header('Location: ../View/login.php');
     exit();
 }
-
-$db->closeConnection($connection);
-
 ?>

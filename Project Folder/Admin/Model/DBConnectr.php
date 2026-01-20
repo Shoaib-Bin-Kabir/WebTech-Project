@@ -78,7 +78,7 @@ class DBConnectr {
 
 
     function insertSeller($connection, $id , $email , $password){
-        $sql = "INSERT INTO Seller (ID,Email, Password) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO seller (ID,Email, Password) VALUES (?, ?, ?)";
         $stmt = $connection->prepare($sql);
         $stmt->bind_param("iss", $id, $email, $password);
         $result = $stmt->execute();
@@ -88,7 +88,7 @@ class DBConnectr {
     
 function getAdminByEmail($connection, $email) {
     $email = $connection->real_escape_string($email);
-    $sql = "SELECT * FROM Admin WHERE Email = ?";
+    $sql = "SELECT * FROM admin WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -98,7 +98,7 @@ function getAdminByEmail($connection, $email) {
 }
 
 function updateAdminName($connection, $email, $name) {
-    $sql = "UPDATE Admin SET Name = ? WHERE Email = ?";
+    $sql = "UPDATE admin SET Name = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $name, $email);
     $result = $stmt->execute();
@@ -107,7 +107,7 @@ function updateAdminName($connection, $email, $name) {
 }
 
 function updateAdminNID($connection, $email, $nid) {
-    $sql = "UPDATE Admin SET NID = ? WHERE Email = ?";
+    $sql = "UPDATE admin SET NID = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $nid, $email);
     $result = $stmt->execute();
@@ -116,7 +116,7 @@ function updateAdminNID($connection, $email, $nid) {
 }
 
 function updateAdminEmail($connection, $oldEmail, $newEmail) {
-    $sql = "UPDATE Admin SET Email = ? WHERE Email = ?";
+    $sql = "UPDATE admin SET Email = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $newEmail, $oldEmail);
     $result = $stmt->execute();
@@ -125,7 +125,7 @@ function updateAdminEmail($connection, $oldEmail, $newEmail) {
 }
 
 function updateAdminPhone($connection, $email, $phone) {
-    $sql = "UPDATE Admin SET Phone_Number = ? WHERE Email = ?";
+    $sql = "UPDATE admin SET Phone_Number = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $phone, $email);
     $result = $stmt->execute();
@@ -134,7 +134,7 @@ function updateAdminPhone($connection, $email, $phone) {
 }
 
 function updateAdminPhoto($connection, $email, $photoPath) {
-    $sql = "UPDATE Admin SET Photo = ? WHERE Email = ?";
+    $sql = "UPDATE admin SET Photo = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $photoPath, $email);
     $result = $stmt->execute();
@@ -210,13 +210,13 @@ function deleteProductAll($connection, $productId) {
 }
 
 function getAllSellers($connection) {
-    $sql = "SELECT * FROM Seller ORDER BY ID ASC";
+    $sql = "SELECT * FROM seller ORDER BY ID ASC";
     $result = $connection->query($sql);
     return $result;
 }
 
 function getSellerByEmail($connection, $email) {
-    $sql = "SELECT * FROM Seller WHERE Email = ?";
+    $sql = "SELECT * FROM seller WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -233,7 +233,7 @@ function deleteSellerFromLogin($connection, $email) {
 }
 
 function deleteSellerFromSeller($connection, $email) {
-    $sql = "DELETE FROM Seller WHERE Email = ?";
+    $sql = "DELETE FROM seller WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("s", $email);
     $result = $stmt->execute();
