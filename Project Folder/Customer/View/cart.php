@@ -11,8 +11,10 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'Customer') {
     exit();
 }
 
+
 include "../Model/DBConnectr.php";
 
+unset($_SESSION['buy_now']);
 $db = new DBConnectr();
 $connection = $db->openConnection();
 
@@ -64,6 +66,7 @@ if ($grandTotal < 0) {
     <title>Customer Cart</title>
     <link rel="stylesheet" href="Design/dashboard.css?v=2">
     <link rel="stylesheet" href="Design/cart.css?v=1">
+    <script src="../Controller/cartUpdate.js"></script>
 </head>
 <body>
     <div class="container">
@@ -144,7 +147,9 @@ if ($grandTotal < 0) {
                                 </div>
                                 <div class="cart-col-price"><?php echo number_format($price, 2); ?></div>
                                 <div class="cart-col-qty">
-                                    <input type="text" name="qty[<?php echo $pid; ?>]" value="<?php echo (int) $qty; ?>" inputmode="numeric" pattern="[0-9]*" class="cart-qty-input">
+                                   <button type="button" class="qty-btn qty-decrease" data-product-id="<?php echo $pid; ?>">-</button>
+                                   <input type="text" name="qty[<?php echo $pid; ?>]" value="<?php echo (int) $qty; ?>" inputmode="numeric" pattern="[0-9]*" class="cart-qty-input" data-max="<?php echo $stock; ?>">
+                                   <button type="button" class="qty-btn qty-increase" data-product-id="<?php echo $pid; ?>">+</button>
                                 </div>
                                 <div class="cart-col-subtotal"><?php echo number_format($sub, 2); ?></div>
                                 <div class="cart-col-action">

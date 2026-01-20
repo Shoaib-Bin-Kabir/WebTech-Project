@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+unset($_SESSION['buy_now']);
 if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
     header('Location: ../../Login and Signup/View/login.php');
     exit();

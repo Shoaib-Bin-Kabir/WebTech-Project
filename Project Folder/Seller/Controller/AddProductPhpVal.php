@@ -111,7 +111,7 @@ $category = $_POST['pdesc'];
 $price = floatval($_POST['pprice']);
 $quantity = intval($_POST['pquantity']);
 
-$photoPath = '/Web_Technologies_Fall_2025-26/WebTech-Project/Project Folder/Product Photos/' . $fileName;
+$photoPath = 'Product Photos/' . $fileName;
 
 $result = $db->insertProduct($connection, $sellerEmail, $productName, $category, $price, $quantity, $photoPath);
 

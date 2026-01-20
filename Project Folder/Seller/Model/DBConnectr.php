@@ -184,5 +184,15 @@ function getHistoryByEmail($connection, $email) {
     return $result;
 }
 
+function getAllOrders($connection) {
+    $sql = "SELECT id, customer_id, product_id, product_name, price, quantity, shipping_address, created_at 
+            FROM orders 
+            ORDER BY created_at DESC";
+    $stmt = $connection->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
 }
 ?>

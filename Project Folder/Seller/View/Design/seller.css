@@ -133,7 +133,7 @@ tr:last-child td {
     border-bottom: none;
 }
 
-/* Inputs & buttons */
+
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -175,7 +175,7 @@ input[type="submit"]:hover {
     background: var(--primary-hover);
 }
 
-/* Make the red "Remove Product" button consistent even with inline styles */
+
 input[value="Remove Product"] {
     background: var(--danger) !important;
 }
@@ -188,19 +188,21 @@ a {
     color: var(--primary);
 }
 
-/* Inventory item wrappers have inline styles; normalize their look */
+a:hover {
+    text-decoration: underline;
+}
 div[style*="border: 1px solid #000"] {
     border: 1px solid var(--border) !important;
     background: var(--panel);
 }
 
-/* Small images */
+
 img {
     max-width: 100%;
     height: auto;
 }
 
-/* Slightly nicer preview box */
+
 #preview img {
     display: block;
     margin-top: 10px;
@@ -221,4 +223,49 @@ img {
     .main-content {
         padding: 18px;
     }
+
+    .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 20px;
+    }
+
+   .history-table thead {
+      background: var(--primary);
+      color: white;
+   }
+
+.history-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.history-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+.history-table tbody tr:hover {
+    background: var(--bg);
+}
+
+.history-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.no-history {
+    background: var(--panel);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    color: var(--muted);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
 }

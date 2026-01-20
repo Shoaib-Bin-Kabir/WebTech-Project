@@ -81,7 +81,7 @@ $selectedCategory = $selectedCategory ?? '';
                 <div class="product-card">
                     <div class="product-media">
                         <?php if ($hasValidPhoto): ?>
-                            <img class="product-image" src="<?php echo htmlspecialchars($photo); ?>" alt="<?php echo htmlspecialchars($name); ?>">
+                           <img class="product-image" src="<?php echo htmlspecialchars('../../' . $photo); ?>" alt="<?php echo htmlspecialchars($name); ?>">
                         <?php else: ?>
                             <div class="product-image-placeholder">No Photo</div>
                         <?php endif; ?>
