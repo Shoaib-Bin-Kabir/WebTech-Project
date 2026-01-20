@@ -37,7 +37,7 @@ if (is_array($quantities)) {
             continue;
         }
 
-        // Optional: cap to available stock
+       
         $productRes = $db->getProductById($connection, $productId);
         $product = $productRes ? $productRes->fetch_assoc() : null;
         if ($product && is_numeric($product['product_quantity'] ?? null)) {
@@ -53,11 +53,11 @@ if (is_array($quantities)) {
     }
 }
 
-// Coupon
+
 $coupon = isset($_POST['coupon']) ? trim((string) $_POST['coupon']) : '';
 $_SESSION['cart_coupon'] = $coupon;
 
-// Shipping address
+
 $shippingAddress = isset($_POST['shipping_address']) ? trim((string) $_POST['shipping_address']) : '';
 $_SESSION['shipping_address'] = $shippingAddress;
 

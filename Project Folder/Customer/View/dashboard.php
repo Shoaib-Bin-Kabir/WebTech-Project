@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Check if user is logged in
+
 if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
     header('Location: ../../Login and Signup/View/login.php');
     exit();
@@ -19,16 +19,16 @@ $connection = $db->openConnection();
 
 $email = $_SESSION['email'];
 
-// Category filter (empty means All)
+
 $selectedCategory = isset($_GET['category']) ? trim($_GET['category']) : '';
 
-// Get customer data
+
 $result = $db->getCustomerByEmail($connection, $email);
 $customer = $result->fetch_assoc();
 
 $customerId = (int) (($customer['ID'] ?? $customer['LoginID'] ?? 0));
 
-// Get product data
+
 $products = [];
 $productsResult = $db->getAllProducts($connection, $selectedCategory);
 if ($productsResult) {
@@ -43,10 +43,10 @@ $db->closeConnection($connection);
 
 $displayName = (!empty($customer['Name'])) ? $customer['Name'] : $email;
 
-// Sidebar edit mode
+
 $isEditing = isset($_GET['edit']) && $_GET['edit'] === '1';
 
-// Get errors and messages
+
 $errors = $_SESSION['errors'] ?? [];
 $successMessage = $_SESSION['successMessage'] ?? '';
 $previousValues = $_SESSION['previousValues'] ?? [];

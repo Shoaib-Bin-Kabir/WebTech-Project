@@ -82,7 +82,7 @@ if ($grandTotal < 0) {
 
 $orderGroup = $db->createOrderGroup();
 
-// Create order item rows (single table)
+
 foreach ($items as $it) {
     $productId = (int) ($it['product_id'] ?? $it['id'] ?? 0);
     $name = (string) ($it['product_name'] ?? '');
@@ -102,7 +102,7 @@ foreach ($items as $it) {
     }
 }
 
-// Clear cart
+
 $db->clearCart($connection, $customerId);
 
 $db->closeConnection($connection);

@@ -2,7 +2,7 @@
 
 session_start();
 
-// Check if user is logged in
+
 if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['user_type'] !== 'Customer') {
     header('Location: ../../Login and Signup/View/login.php');
     exit();
@@ -13,7 +13,6 @@ include "../Model/DBConnectr.php";
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-// Get form data
 $name = $_POST['name'] ?? '';
 $phone = $_POST['phone'] ?? '';
 $nid = $_POST['nid'] ?? '';
@@ -46,7 +45,7 @@ if (empty($nid)) {
     $errors['nid'] = 'NID must be at least 10 characters';
 }
 
-// Handle photo upload
+
 $photoPath = null;
 if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE) {
     if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
@@ -79,7 +78,7 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE)
     }
 }
 
-// If validation failed, redirect back
+
 if (count($errors) > 0) {
     $_SESSION['errors'] = $errors;
     $_SESSION['previousValues'] = ['name' => $name, 'phone' => $phone, 'nid' => $nid];
@@ -87,7 +86,7 @@ if (count($errors) > 0) {
     exit();
 }
 
-// Update customer
+
 $db = new DBConnectr();
 $connection = $db->openConnection();
 

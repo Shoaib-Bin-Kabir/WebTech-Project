@@ -2,7 +2,7 @@
 
 class DBConnectr {
     
-    // Open connection to database
+   
     function openConnection() {
         $db_host = "localhost";
         $db_user = "root";
@@ -18,12 +18,12 @@ class DBConnectr {
         return $connection;
     }
     
-    // Close connection
+  
     function closeConnection($connection) {
         $connection->close();
     }
     
-    // Get customer info by email
+    
     function getCustomerByEmail($connection, $email) {
         $email = $connection->real_escape_string($email);
         
@@ -35,7 +35,7 @@ class DBConnectr {
         return $result;
     }
     
-    // Update customer info
+    
     function updateCustomer($connection, $id, $name, $phone, $nid) {
         $id = $connection->real_escape_string($id);
         $name = $connection->real_escape_string($name);
@@ -48,7 +48,7 @@ class DBConnectr {
         return $result;
     }
     
-    // Update customer photo
+   
     function updateCustomerPhoto($connection, $id, $photoPath) {
         $id = $connection->real_escape_string($id);
         $photoPath = $connection->real_escape_string($photoPath);
@@ -59,7 +59,7 @@ class DBConnectr {
         return $result;
     }
     
-    // Create customer record
+    
     function createCustomerRecord($connection, $loginID, $email, $password) {
         $loginID = $connection->real_escape_string($loginID);
         $email = $connection->real_escape_string($email);
@@ -71,7 +71,7 @@ class DBConnectr {
         return $result;
     }
 
-    // Get products for customer dashboard (optionally by category)
+
     function getAllProducts($connection, $category = '') {
         if ($category === '' || $category === null) {
             $sql = "SELECT id, product_name, product_category, product_price, product_quantity, product_photo FROM products";
@@ -83,7 +83,7 @@ class DBConnectr {
         return $connection->query($sql);
     }
 
-    // Search only by product name
+    
     function searchProducts($connection, $q = '') {
         $q = ($q === null) ? '' : trim($q);
 
