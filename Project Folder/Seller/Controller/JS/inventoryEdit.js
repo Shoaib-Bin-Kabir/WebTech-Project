@@ -70,20 +70,20 @@ function toggleEdit(fieldName, productId) {
 }
 
 function togglePhotoEdit(productId) {
-    const fieldKey = 'photo_' + productId;
+    let fieldKey = 'photo_' + productId;
     
     if (editingField && editingField !== fieldKey) {
         alert('Please save the current edit before editing another field.');
         return;
     }
     
-    const displayId = 'photoDisplay_' + productId;
-    const formId = 'photoForm_' + productId;
-    const btnId = 'photoBtn_' + productId;
+    let displayId = 'photoDisplay_' + productId;
+    let formId = 'photoForm_' + productId;
+    let btnId = 'photoBtn_' + productId;
     
-    const displayElement = document.getElementById(displayId);
-    const formElement = document.getElementById(formId);
-    const btnElement = document.getElementById(btnId);
+    let displayElement = document.getElementById(displayId);
+    let formElement = document.getElementById(formId);
+    let btnElement = document.getElementById(btnId);
     
     if (editingField === null) {
         displayElement.style.display = 'none';
@@ -91,12 +91,14 @@ function togglePhotoEdit(productId) {
         btnElement.value = 'Save Photo';
         editingField = fieldKey;
     } else {
-        const fileInput = formElement.querySelector('input[type="file"]');
+        let actualForm = document.getElementById('photoFormElement_' + productId);
+        let fileInput = actualForm.querySelector('input[type="file"]');
         if (!fileInput.files || fileInput.files.length === 0) {
             alert('Please select a photo to upload');
             return;
         }
-        formElement.submit();
+        actualForm.submit();
+        editingField = null;
     }
 }
 

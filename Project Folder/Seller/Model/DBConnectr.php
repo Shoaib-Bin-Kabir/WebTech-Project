@@ -68,9 +68,16 @@ function updateSellerEmail($connection, $oldEmail, $newEmail) {
     $sql = "UPDATE seller SET Email = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $newEmail, $oldEmail);
-    $result = $stmt->execute();
+    $result1 = $stmt->execute();
     $stmt->close();
-    return $result;
+    
+    $sql2 = "UPDATE Login SET email = ? WHERE email = ?";
+    $stmt2 = $connection->prepare($sql2);
+    $stmt2->bind_param("ss", $newEmail, $oldEmail);
+    $result2 = $stmt2->execute();
+    $stmt2->close();
+    
+    return ($result1 && $result2);
 }
 
 function updateSellerPhone($connection, $email, $phone) {

@@ -85,19 +85,18 @@ $db->closeConnection($connection);
                                 </div>
                                 
                                 <div id="photoForm_<?php echo $product['id']; ?>" style="display: none;">
-                                    <form id="photoFormElement_<?php echo $product['id']; ?>" 
-                                          method="post" 
-                                          action="../Controller/updateInventory.php" 
-                                          enctype="multipart/form-data">
-                                        <input type="hidden" name="updateType" value="photo">
-                                        <input type="hidden" name="productId" value="<?php echo $product['id']; ?>">
-                                        <div id="photoPreview_<?php echo $product['id']; ?>" style="width: 100px; height: 100px; border: 1px dashed #ccc; margin-bottom: 5px;"></div>
-                                        <input type="file" 
-                                               name="productPhoto" 
-                                               accept="image/*" 
-                                               onchange="previewProductPhoto(this, <?php echo $product['id']; ?>)" 
-                                               required>
-                                    </form>
+                                  <form id="photoFormElement_<?php echo $product['id']; ?>" 
+                                   method="post" 
+                                   action="../Controller/updateInventory.php" 
+                                   enctype="multipart/form-data">
+                                   <input type="hidden" name="updateType" value="photo">
+                                   <input type="hidden" name="productId" value="<?php echo $product['id']; ?>">
+                                   <div id="photoPreview_<?php echo $product['id']; ?>" style="width: 100px; height: 100px; border: 1px dashed #ccc; margin-bottom: 5px;"></div>
+                                   <input type="file" 
+                                     name="productPhoto" 
+                                     accept="image/*" 
+                                     onchange="previewProductPhoto(this, <?php echo $product['id']; ?>)">
+                                  </form>
                                 </div>
                             </td>
                             <td>

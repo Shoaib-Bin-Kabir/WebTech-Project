@@ -119,9 +119,16 @@ function updateAdminEmail($connection, $oldEmail, $newEmail) {
     $sql = "UPDATE admin SET Email = ? WHERE Email = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("ss", $newEmail, $oldEmail);
-    $result = $stmt->execute();
+    $result1 = $stmt->execute();
     $stmt->close();
-    return $result;
+    
+    $sql2 = "UPDATE Login SET email = ? WHERE email = ?";
+    $stmt2 = $connection->prepare($sql2);
+    $stmt2->bind_param("ss", $newEmail, $oldEmail);
+    $result2 = $stmt2->execute();
+    $stmt2->close();
+    
+    return ($result1 && $result2);
 }
 
 function updateAdminPhone($connection, $email, $phone) {
@@ -151,7 +158,7 @@ function checkProductNameExists($connection, $productName) {
     return $result;
 }
 
-// Insert product (admin adds to shop inventory)
+
 function insertProduct($connection, $adminEmail, $productName, $category, $price, $quantity, $photoPath) {
     $sql = "INSERT INTO products (seller_email, product_name, product_category, product_price, product_quantity, product_photo) 
             VALUES (?, ?, ?, ?, ?, ?)";
@@ -204,7 +211,6 @@ function updateProductPhotoAll($connection, $productId, $photoPath) {
 function deleteProductAll($connection, $productId) {
     $productId = (int) $productId;
 
-    // Remove from all customer carts first (avoid orphan cart rows).
     $sqlCart = "DELETE FROM customer_cart_items WHERE product_id = ?";
     $stmtCart = $connection->prepare($sqlCart);
     $stmtCart->bind_param("i", $productId);
