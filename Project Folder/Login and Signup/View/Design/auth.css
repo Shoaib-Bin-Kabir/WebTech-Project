@@ -1,0 +1,225 @@
+/* Simple auth styling matching Customer dashboard color scheme */
+
+:root {
+    --bg: #f5f5f5;
+    --panel: #ffffff;
+    --text: #2c3e50;
+    --muted: #7f8c8d;
+    --border: #dcdcdc;
+    --primary: #3498db;
+    --primary-hover: #2980b9;
+    --brand-deep: #2c3e50;
+    --brand-blue: #3498db;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.split {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    background: linear-gradient(180deg, var(--brand-blue) 0%, var(--brand-deep) 100%);
+}
+
+.marketing {
+    width: 44%;
+    min-width: 340px;
+    color: #ecf0f1;
+    background: transparent;
+    padding: 44px 34px;
+    display: flex;
+    align-items: center;
+}
+
+.marketing-inner {
+    width: 100%;
+    max-width: 520px;
+    padding-left: 64px;
+}
+
+.brand {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+}
+
+.motto {
+    font-size: 15px;
+    color: rgba(236, 240, 241, 0.82);
+    margin-bottom: 28px;
+    font-weight: 700;
+}
+
+.welcome-title {
+    font-size: 28px;
+    line-height: 1.2;
+    margin-bottom: 12px;
+}
+
+.welcome-text {
+    color: rgba(236, 240, 241, 0.86);
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    font-weight: 700;
+}
+
+.welcome-list {
+    margin-left: 18px;
+    color: rgba(236, 240, 241, 0.86);
+    font-size: 16px;
+    line-height: 1.9;
+    font-weight: 700;
+}
+
+.auth {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 28px 34px;
+    background: transparent;
+}
+
+.auth-card {
+    width: 520px;
+    max-width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 18px 18px 14px;
+}
+
+.auth-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: var(--text);
+}
+
+.auth-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.auth-table td {
+    padding: 8px 6px;
+    vertical-align: top;
+}
+
+label {
+    font-size: 14px;
+    color: var(--text);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bfbfbf;
+    background: #fff;
+    font-size: 14px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="file"]:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.submit-row {
+    padding-top: 12px;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background: var(--primary-hover);
+}
+
+.helper-link {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.helper-link:hover {
+    text-decoration: underline;
+}
+
+.error-text {
+    color: #c0392b;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.site-footer {
+    border-top: 1px solid var(--border);
+    padding: 14px 16px;
+    text-align: center;
+    color: var(--muted);
+    background: #ffffff;
+}
+
+.footer-title {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+    .split {
+        flex-direction: column;
+    }
+
+    .marketing {
+        width: 100%;
+        min-width: 0;
+        padding: 28px 18px;
+    }
+
+    .marketing-inner {
+        padding-left: 0;
+    }
+
+    .auth {
+        justify-content: center;
+        padding: 18px;
+    }
+}
+
+.footer-info {
+    font-size: 13px;
+    line-height: 1.6;
+}

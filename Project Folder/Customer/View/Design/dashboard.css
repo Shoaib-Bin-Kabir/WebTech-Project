@@ -33,16 +33,16 @@ body {
 .profile-photo {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
+    border-radius: 0;
     object-fit: cover;
-    border: 3px solid #3498db;
+    border: 0;
     margin-bottom: 15px;
 }
 
 .profile-placeholder {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
+    border-radius: 0;
     background-color: #34495e;
     display: flex;
     align-items: center;
