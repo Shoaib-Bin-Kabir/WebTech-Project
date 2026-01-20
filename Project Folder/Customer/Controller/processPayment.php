@@ -37,7 +37,13 @@ if ($customerId <= 0) {
 }
 
 $coupon = isset($_SESSION['cart_coupon']) ? trim((string) $_SESSION['cart_coupon']) : '';
-$shippingAddress = isset($_SESSION['shipping_address']) ? trim((string) $_SESSION['shipping_address']) : '';
+$shippingAddress = isset($_POST['shipping_address']) ? trim((string) $_POST['shipping_address']) : '';
+if ($shippingAddress === '') {
+    $shippingAddress = isset($_SESSION['shipping_address']) ? trim((string) $_SESSION['shipping_address']) : '';
+} else {
+    // Persist for subsequent steps/pages.
+    $_SESSION['shipping_address'] = $shippingAddress;
+}
 
 if ($shippingAddress === '') {
     $db->closeConnection($connection);
@@ -52,16 +58,37 @@ if ($coupon === 'Semester Over') {
 }
 
 $items = [];
-$cartRes = $db->getCartItems($connection, $customerId);
-if ($cartRes) {
-    while ($row = $cartRes->fetch_assoc()) {
-        $items[] = $row;
+$isBuyNow = false;
+$buyNow = $_SESSION['buy_now'] ?? null;
+
+if (is_array($buyNow) && isset($buyNow['product_id'])) {
+    $isBuyNow = true;
+    $buyNowProductId = (int) $buyNow['product_id'];
+    $buyNowQty = 1;
+
+    $productRes = $db->getProductById($connection, $buyNowProductId);
+    $product = $productRes ? $productRes->fetch_assoc() : null;
+    if ($product) {
+        $items[] = [
+            'product_id' => $buyNowProductId,
+            'cart_quantity' => $buyNowQty,
+            'product_name' => $product['product_name'] ?? '',
+            'product_price' => $product['product_price'] ?? 0,
+        ];
+    }
+} else {
+    $cartRes = $db->getCartItems($connection, $customerId);
+    if ($cartRes) {
+        while ($row = $cartRes->fetch_assoc()) {
+            $items[] = $row;
+        }
     }
 }
 
 if (count($items) === 0) {
     $db->closeConnection($connection);
-    header('Location: ../View/cart.php');
+    $_SESSION['orderError'] = 'No items to checkout.';
+    header('Location: ../View/payment.php');
     exit();
 }
 
@@ -100,7 +127,7 @@ foreach ($items as $it) {
         $connection->rollback();
         $db->closeConnection($connection);
         $_SESSION['orderError'] = 'Not enough stock available for: ' . $name;
-        header('Location: ../View/cart.php');
+        header('Location: ../View/payment.php');
         exit();
     }
 
@@ -114,21 +141,27 @@ foreach ($items as $it) {
     }
 }
 
-$clearOk = $db->clearCart($connection, $customerId);
-if (!$clearOk) {
-    $connection->rollback();
-    $db->closeConnection($connection);
-    $_SESSION['orderError'] = 'Could not clear cart after payment.';
-    header('Location: ../View/payment.php');
-    exit();
+if (!$isBuyNow) {
+    $clearOk = $db->clearCart($connection, $customerId);
+    if (!$clearOk) {
+        $connection->rollback();
+        $db->closeConnection($connection);
+        $_SESSION['orderError'] = 'Could not clear cart after payment.';
+        header('Location: ../View/payment.php');
+        exit();
+    }
 }
 
 $connection->commit();
 
 $db->closeConnection($connection);
 
-unset($_SESSION['cart_coupon']);
-unset($_SESSION['shipping_address']);
+if ($isBuyNow) {
+    unset($_SESSION['buy_now']);
+} else {
+    unset($_SESSION['cart_coupon']);
+    unset($_SESSION['shipping_address']);
+}
 
 $_SESSION['orderSuccess'] = 'Payment successful. Your order has been placed.';
 

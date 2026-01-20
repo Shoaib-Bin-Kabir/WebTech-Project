@@ -79,7 +79,10 @@ foreach ($products as $product) {
     echo '<input type="hidden" name="product_id" value="' . (int) $productId . '">';
     echo '<button type="submit" class="product-btn btn-cart"' . ($isOutOfStock ? ' disabled title="Not available"' : '') . '>Add to Cart</button>';
     echo '</form>';
-    echo '<button type="button" class="product-btn btn-buy"' . ($isOutOfStock ? ' disabled title="Not available"' : '') . '>Buy Now</button>';
+    echo '<form method="post" action="../Controller/buyNow.php" style="flex: 1;">';
+    echo '<input type="hidden" name="product_id" value="' . (int) $productId . '">';
+    echo '<button type="submit" class="product-btn btn-buy"' . ($isOutOfStock ? ' disabled title="Not available"' : '') . '>Buy Now</button>';
+    echo '</form>';
     echo '</div>';
 
     echo '</div>';

@@ -106,7 +106,10 @@ $selectedCategory = $selectedCategory ?? '';
                                 <input type="hidden" name="product_id" value="<?php echo (int) $productId; ?>">
                                 <button type="submit" class="product-btn btn-cart" <?php echo $isOutOfStock ? 'disabled title="Not available"' : ''; ?>>Add to Cart</button>
                             </form>
-                            <button type="button" class="product-btn btn-buy" <?php echo $isOutOfStock ? 'disabled title="Not available"' : ''; ?>>Buy Now</button>
+                            <form method="post" action="../Controller/buyNow.php" style="flex: 1;">
+                                <input type="hidden" name="product_id" value="<?php echo (int) $productId; ?>">
+                                <button type="submit" class="product-btn btn-buy" <?php echo $isOutOfStock ? 'disabled title="Not available"' : ''; ?>>Buy Now</button>
+                            </form>
                         </div>
                     </div>
                 </div>

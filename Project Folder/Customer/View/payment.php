@@ -27,7 +27,7 @@ if ($customerId <= 0) {
     exit();
 }
 
-// If coming from cart form, apply updates first
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantities = $_POST['qty'] ?? [];
     if (is_array($quantities)) {
@@ -70,10 +70,32 @@ if ($coupon === 'Semester Over') {
 }
 
 $items = [];
-$cartRes = $db->getCartItems($connection, $customerId);
-if ($cartRes) {
-    while ($row = $cartRes->fetch_assoc()) {
-        $items[] = $row;
+$buyNow = $_SESSION['buy_now'] ?? null;
+if (is_array($buyNow) && isset($buyNow['product_id'])) {
+    $buyNowProductId = (int) $buyNow['product_id'];
+    $buyNowQty = 1;
+
+    $productRes = $db->getProductById($connection, $buyNowProductId);
+    $product = $productRes ? $productRes->fetch_assoc() : null;
+
+    if ($product) {
+        $items[] = [
+            'product_id' => $buyNowProductId,
+            'cart_quantity' => $buyNowQty,
+            'product_name' => $product['product_name'] ?? '',
+            'product_price' => $product['product_price'] ?? 0,
+            'product_quantity' => $product['product_quantity'] ?? 0,
+        ];
+    } else {
+        $_SESSION['orderError'] = 'Product is not available.';
+        unset($_SESSION['buy_now']);
+    }
+} else {
+    $cartRes = $db->getCartItems($connection, $customerId);
+    if ($cartRes) {
+        while ($row = $cartRes->fetch_assoc()) {
+            $items[] = $row;
+        }
     }
 }
 
@@ -99,11 +121,6 @@ $db->closeConnection($connection);
 $displayName = (!empty($customer['Name'])) ? $customer['Name'] : $email;
 $orderError = isset($_SESSION['orderError']) ? (string) $_SESSION['orderError'] : '';
 unset($_SESSION['orderError']);
-
-$shippingError = '';
-if (count($items) > 0 && trim((string) $shippingAddress) === '') {
-    $shippingError = 'Please provide a shipping address in Cart before paying.';
-}
 ?>
 
 <!DOCTYPE html>
@@ -163,10 +180,6 @@ if (count($items) > 0 && trim((string) $shippingAddress) === '') {
                 <p class="products-empty"><?php echo htmlspecialchars($orderError); ?></p>
             <?php endif; ?>
 
-            <?php if ($shippingError !== ''): ?>
-                <p class="products-empty"><?php echo htmlspecialchars($shippingError); ?></p>
-            <?php endif; ?>
-
             <?php if (count($items) === 0): ?>
                 <p class="products-empty">Your cart is empty.</p>
             <?php else: ?>
@@ -185,8 +198,12 @@ if (count($items) > 0 && trim((string) $shippingAddress) === '') {
                         <?php endif; ?>
                     </div>
 
-                    <?php if ($shippingError === ''): ?>
                     <form method="post" action="../Controller/processPayment.php">
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-weight: 700;">Shipping Address:</label>
+                            <textarea name="shipping_address" rows="3" class="product-filter-select" required><?php echo htmlspecialchars($shippingAddress); ?></textarea>
+                        </div>
+
                         <div style="margin-bottom: 10px;">
                             <label style="font-weight: 700;">Payment Method:</label>
                             <select name="method" class="product-filter-select">
@@ -203,7 +220,6 @@ if (count($items) > 0 && trim((string) $shippingAddress) === '') {
 
                         <button type="submit" class="product-btn btn-buy">Confirm Payment</button>
                     </form>
-                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
