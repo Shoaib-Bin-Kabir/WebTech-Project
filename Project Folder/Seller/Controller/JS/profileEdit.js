@@ -61,7 +61,7 @@ function toggleEdit(fieldName) {
         btnElement.value = 'Done';
         editingField = fieldName;
     } else {
-        // Validate before submitting
+       
         const inputElement = formElement.querySelector('input[type="text"], input[type="email"]');
         const value = inputElement.value.trim();
         let errorMessage = '';

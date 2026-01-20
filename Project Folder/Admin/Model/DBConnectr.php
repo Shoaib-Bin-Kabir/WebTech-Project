@@ -169,9 +169,24 @@ function insertProduct($connection, $adminEmail, $productName, $category, $price
     return $result;
 }
 
+function insertProductByAdmin($connection, $adminEmail, $productName, $category, $price, $quantity, $photoPath) {
+    return $this->insertProduct($connection, $adminEmail, $productName, $category, $price, $quantity, $photoPath);
+}
+
+function insertHistory($connection, $userEmail, $userName, $actionType, $target, $oldValue, $newValue) {
+    $sql = "INSERT INTO history (user_email, user_name, action_type, target, old_value, new_value) 
+            VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ssssss", $userEmail, $userName, $actionType, $target, $oldValue, $newValue);
+    $result = $stmt->execute();
+    return $result;
+}
+
 function getAllProducts($connection) {
     $sql = "SELECT * FROM products ORDER BY created_at DESC";
-    $result = $connection->query($sql);
+    $stmt = $connection->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
     return $result;
 }
 
@@ -252,6 +267,24 @@ function deleteSellerFromSeller($connection, $email) {
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("s", $email);
     $result = $stmt->execute();
+    return $result;
+}
+
+function getAllHistory($connection) {
+    $sql = "SELECT * FROM history ORDER BY created_at DESC";
+    $stmt = $connection->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
+function getAllOrders($connection) {
+    $sql = "SELECT id, customer_id, product_id, product_name, price, quantity, shipping_address, created_at 
+            FROM orders 
+            ORDER BY created_at DESC";
+    $stmt = $connection->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
     return $result;
 }
 

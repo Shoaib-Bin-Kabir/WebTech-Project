@@ -197,7 +197,7 @@ unset($_SESSION['addProductErr']);
                         </div>
                         
                         <div id="photoForm_<?php echo $product['id']; ?>" style="display: none;">
-                            <form method="post" action="../Controller/updateInventory.php" enctype="multipart/form-data">
+                            <form id="photoFormElement_<?php echo $product['id']; ?>" method="post" action="../Controller/updateInventory.php" enctype="multipart/form-data">
                                 <input type="hidden" name="updateType" value="photo">
                                 <input type="hidden" name="productId" value="<?php echo $product['id']; ?>">
                                 <div id="photoPreview_<?php echo $product['id']; ?>" style="width: 100px; height: 100px; border: 1px dashed #ccc;"></div>
