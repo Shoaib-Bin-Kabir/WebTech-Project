@@ -29,36 +29,42 @@ $db->closeConnection($connection);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Inventory</title>
+    <link rel="stylesheet" href="Design/seller.css">
     <script src="../Controller/JS/inventoryEdit.js"></script>
 </head>
 <body>
-    <?php
-    // Display error or success messages
-    if (isset($_SESSION['inventoryError'])) {
-        echo '<p style="color: red; font-weight: bold;">' . htmlspecialchars($_SESSION['inventoryError']) . '</p>';
-        unset($_SESSION['inventoryError']);
-    }
-    if (isset($_SESSION['inventorySuccess'])) {
-        echo '<p style="color: green; font-weight: bold;">' . htmlspecialchars($_SESSION['inventorySuccess']) . '</p>';
-        unset($_SESSION['inventorySuccess']);
-    }
-    ?>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-placeholder">S</div>
+                <div class="welcome-text">Seller Dashboard</div>
+                <div class="user-email"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></div>
+            </div>
+            <div class="actions-section">
+                <a class="action-btn" href="SHomePage.php">Home</a>
+                <a class="action-btn" href="addProduct.php">Add Product</a>
+                <a class="action-btn" href="editInventory.php">Edit Inventory</a>
+                <a class="action-btn" href="History.php">History</a>
+                <a class="action-btn" href="profile.php">Profile</a>
+                <a class="action-btn logout" href="../../Login and Signup/Controller/logout.php">Logout</a>
+            </div>
+        </aside>
 
-    <div>
-        <nav>
-            <ul>
-                <li><a href="SHomePage.php">Home Page</a></li>
-                <li><a href="profile.php">Profile</a></li>
-                <li><a href="addProduct.php">Add Product</a></li>
-                <li><a href="History.php">History</a></li>
-                <li><a href="../../Login and Signup/Controller/logout.php">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
+        <main class="main-content">
+            <h1>Edit Inventory</h1>
+            <?php
+            // Display error or success messages
+            if (isset($_SESSION['inventoryError'])) {
+                echo '<p style="color: red; font-weight: bold;">' . htmlspecialchars($_SESSION['inventoryError']) . '</p>';
+                unset($_SESSION['inventoryError']);
+            }
+            if (isset($_SESSION['inventorySuccess'])) {
+                echo '<p style="color: green; font-weight: bold;">' . htmlspecialchars($_SESSION['inventorySuccess']) . '</p>';
+                unset($_SESSION['inventorySuccess']);
+            }
+            ?>
 
-    <h1>Edit Inventory</h1>
-
-    <div>
+            <div>
         <?php if ($products->num_rows > 0): ?>
             <?php while ($product = $products->fetch_assoc()): ?>
                 <div style="border: 1px solid #000; padding: 15px; margin: 10px 0;">
@@ -202,6 +208,8 @@ $db->closeConnection($connection);
         <?php else: ?>
             <p>No products found. <a href="addProduct.php">Add your first product</a></p>
         <?php endif; ?>
+            </div>
+        </main>
     </div>
 </body>
 </html>

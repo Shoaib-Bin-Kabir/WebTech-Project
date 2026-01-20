@@ -43,34 +43,42 @@ $db->closeConnection($connection);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Profile</title>
+    <link rel="stylesheet" href="Design/seller.css">
     <script src="../Controller/JS/profileEdit.js"></script>
 </head>
 <body>
-     <?php
-   
-    if (isset($_SESSION['updateError'])) {
-        echo '<p style="color: red; font-weight: bold;">' . htmlspecialchars($_SESSION['updateError']) . '</p>';
-        unset($_SESSION['updateError']);
-    }
-    if (isset($_SESSION['updateSuccess'])) {
-        echo '<p style="color: green; font-weight: bold;">' . htmlspecialchars($_SESSION['updateSuccess']) . '</p>';
-        unset($_SESSION['updateSuccess']);
-    }
-    ?>
-    <div>
-        <nav>
-            <ul>
-                <li><a href="SHomePage.php">Home Page</a></li>
-                <li><a href="addProduct.php">Add Product</a></li>
-                <li><a href="History.php">History</a></li>
-                <li><a href="editInventory.php">Edit Inventory</a></li>
-                <li><a href="../../Login and Signup/Controller/logout.php">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-placeholder">S</div>
+                <div class="welcome-text">Seller Dashboard</div>
+                <div class="user-email"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></div>
+            </div>
+            <div class="actions-section">
+                <a class="action-btn" href="SHomePage.php">Home</a>
+                <a class="action-btn" href="addProduct.php">Add Product</a>
+                <a class="action-btn" href="editInventory.php">Edit Inventory</a>
+                <a class="action-btn" href="History.php">History</a>
+                <a class="action-btn" href="profile.php">Profile</a>
+                <a class="action-btn logout" href="../../Login and Signup/Controller/logout.php">Logout</a>
+            </div>
+        </aside>
 
-    <div>
-        <table>
+        <main class="main-content">
+            <h1>Profile</h1>
+            <?php
+            if (isset($_SESSION['updateError'])) {
+                echo '<p style="color: red; font-weight: bold;">' . htmlspecialchars($_SESSION['updateError']) . '</p>';
+                unset($_SESSION['updateError']);
+            }
+            if (isset($_SESSION['updateSuccess'])) {
+                echo '<p style="color: green; font-weight: bold;">' . htmlspecialchars($_SESSION['updateSuccess']) . '</p>';
+                unset($_SESSION['updateSuccess']);
+            }
+            ?>
+
+            <div>
+                <table>
             <tr>
                 <td>
                     <div id="photoDisplay">
@@ -102,11 +110,11 @@ $db->closeConnection($connection);
                     <input type="button" id="photoBtn" value="Edit Profile Photo" onclick="togglePhotoEdit()">
                 </td>
             </tr>
-        </table>
-    </div>
+                </table>
+            </div>
 
-    <div>
-        <table>
+            <div>
+                <table>
             <tr>
                 <td>Name:</td>
                 <td>
@@ -188,15 +196,9 @@ $db->closeConnection($connection);
                     <input type="button" id="phoneBtn" value="Edit Phone Number" onclick="toggleEdit('phone')">
                 </td>
             </tr>
-
-            <tr>
-                <td colspan="3">
-                    <a href="../../Login and Signup/Controller/logout.php">
-                        <button>Logout</button>
-                    </a>
-                </td>
-            </tr>     
-        </table>
+                </table>
+            </div>
+        </main>
     </div>
 </body>
 </html>

@@ -49,37 +49,44 @@ $db->closeConnection($connection);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Home Page</title>
+    <link rel="stylesheet" href="Design/seller.css">
 </head>
 <body>
-    <h1>Welcome to the Seller Home Page</h1>
-    
-    <div>
-        <nav>
-            <ul>
-                <li><a href="addProduct.php">Add Product</a></li>
-                <li><a href="History.php">History</a></li>
-                <li><a href="editInventory.php">Edit Inventory</a></li>
-                <li><a href="profile.php">Profile</a></li>
-                <li><a href="../../Login and Signup/Controller/logout.php">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
-
-    <div>
-        <?php if (!empty($sellerPhoto) && file_exists("../" . $sellerPhoto)): ?>
-            <img src="<?php echo htmlspecialchars("../" . $sellerPhoto); ?>" 
-                 alt="Profile Photo" 
-                 width="150" 
-                 height="150">
-        <?php else: ?>
-            <div style="width: 150px; height: 150px; border: 1px solid #ccc;">
-                <p>No profile photo</p>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-placeholder">S</div>
+                <div class="welcome-text">Seller Dashboard</div>
+                <div class="user-email"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></div>
             </div>
-        <?php endif; ?>
-    </div>
+            <div class="actions-section">
+                <a class="action-btn" href="SHomePage.php">Home</a>
+                <a class="action-btn" href="addProduct.php">Add Product</a>
+                <a class="action-btn" href="editInventory.php">Edit Inventory</a>
+                <a class="action-btn" href="History.php">History</a>
+                <a class="action-btn" href="profile.php">Profile</a>
+                <a class="action-btn logout" href="../../Login and Signup/Controller/logout.php">Logout</a>
+            </div>
+        </aside>
 
-    <div>
-        <table>
+        <main class="main-content">
+            <h1>Seller Home</h1>
+
+            <div>
+                <?php if (!empty($sellerPhoto) && file_exists("../" . $sellerPhoto)): ?>
+                    <img src="<?php echo htmlspecialchars("../" . $sellerPhoto); ?>" 
+                         alt="Profile Photo" 
+                         width="150" 
+                         height="150">
+                <?php else: ?>
+                    <div style="width: 150px; height: 150px; border: 1px solid #ccc;">
+                        <p>No profile photo</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <table>
             <tr>
                 <td><strong>Name:</strong></td>
                 <td>
@@ -136,24 +143,9 @@ $db->closeConnection($connection);
                     ?>
                 </td>
             </tr>
-
-            <tr>
-                <td colspan="2">
-                    <button onclick="window.location.href='profile.php'">Edit Profile</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    <a href="../../Login and Signup/Controller/logout.php">
-                        <button>Logout</button>
-                    </a>
-                </td>
-            </tr>     
-        </table>
+                </table>
+            </div>
+        </main>
     </div>
-
-    
-
 </body>
 </html>

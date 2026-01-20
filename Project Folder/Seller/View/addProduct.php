@@ -31,27 +31,31 @@ unset($_SESSION['previousValues']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
+    <link rel="stylesheet" href="Design/seller.css">
     <script src="../Controller/JS/AddProductJSval.php"></script>
 </head>
 <body>
-    <div>
-        <nav>
-            <ul>
-                <li><a href="SHomePage.php">Home Page</a></li>
-                <li><a href="profile.php">Profile</a></li>
-                <li><a href="History.php">History</a></li>
-                <li><a href="editInventory.php">Edit Inventory</a></li>
-                <li><a href="../../Login and Signup/Controller/logout.php">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-placeholder">S</div>
+                <div class="welcome-text">Seller Dashboard</div>
+                <div class="user-email"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></div>
+            </div>
+            <div class="actions-section">
+                <a class="action-btn" href="SHomePage.php">Home</a>
+                <a class="action-btn" href="addProduct.php">Add Product</a>
+                <a class="action-btn" href="editInventory.php">Edit Inventory</a>
+                <a class="action-btn" href="History.php">History</a>
+                <a class="action-btn" href="profile.php">Profile</a>
+                <a class="action-btn logout" href="../../Login and Signup/Controller/logout.php">Logout</a>
+            </div>
+        </aside>
 
-    <div>
-        <h2>Add Product Page</h2>
-    </div>
-
-    <div>
-        <form action="../Controller/AddProductPhpVal.php" method="POST" enctype="multipart/form-data" onsubmit="validateAddProduct(event)">  
+        <main class="main-content">
+            <h2>Add Product</h2>
+            <div>
+                <form action="../Controller/AddProductPhpVal.php" method="POST" enctype="multipart/form-data" onsubmit="validateAddProduct(event)">  
             <table>
                 <tr>
                     <td><label for="pname">Product Name:</label></td>
@@ -127,6 +131,8 @@ unset($_SESSION['previousValues']);
                 </tr>
             </table>
         </form>
+            </div>
+        </main>
     </div>
 </body>
 </html>
