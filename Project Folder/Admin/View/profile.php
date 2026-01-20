@@ -43,32 +43,41 @@ $db->closeConnection($connection);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Profile</title>
+    <link rel="stylesheet" href="../Design/admin.css">
     <script src="../Controller/JS/profileEdit.js"></script>
 </head>
 <body>
-    <?php
-    // Display error or success messages
-    if (isset($_SESSION['updateError'])) {
-        echo '<p style="color: red; font-weight: bold;">' . htmlspecialchars($_SESSION['updateError']) . '</p>';
-        unset($_SESSION['updateError']);
-    }
-    if (isset($_SESSION['updateSuccess'])) {
-        echo '<p style="color: green; font-weight: bold;">' . htmlspecialchars($_SESSION['updateSuccess']) . '</p>';
-        unset($_SESSION['updateSuccess']);
-    }
-    ?>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-placeholder">A</div>
+                <div class="welcome-text">Admin Dashboard</div>
+                <div class="user-email"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></div>
+            </div>
+            <div class="actions-section">
+                <a class="action-btn" href="AHomePage.php">Home</a>
+                <a class="action-btn" href="allHistory.php">History</a>
+                <a class="action-btn" href="ManInventory.php">Manage Inventory</a>
+                <a class="action-btn" href="ManSeller.php">Manage Seller</a>
+                <a class="action-btn" href="profile.php">Profile</a>
+                <a class="action-btn logout" href="../../Login and Signup/Controller/logout.php">Logout</a>
+            </div>
+        </aside>
 
-    <div>
-        <nav>
-            <ul>
-                <li><a href="AHomePage.php">Home Page</a></li>
-                <li><a href="allHistory.php">See History</a></li>
-                <li><a href="ManInventory.php">Manage Inventory</a></li>
-                <li><a href="ManSeller.php">Manage Seller</a></li>
-                <li><a href="../../Login and Signup/Controller/logout.php">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
+        <main class="main-content">
+            <?php
+            // Display error or success messages
+            if (isset($_SESSION['updateError'])) {
+                echo '<p style="color: red; font-weight: bold;">' . htmlspecialchars($_SESSION['updateError']) . '</p>';
+                unset($_SESSION['updateError']);
+            }
+            if (isset($_SESSION['updateSuccess'])) {
+                echo '<p style="color: green; font-weight: bold;">' . htmlspecialchars($_SESSION['updateSuccess']) . '</p>';
+                unset($_SESSION['updateSuccess']);
+            }
+            ?>
+
+            <h1>Admin Profile</h1>
 
     <div>
         <table>
@@ -190,14 +199,10 @@ $db->closeConnection($connection);
                 </td>
             </tr>
 
-            <tr>
-                <td colspan="3">
-                    <a href="../../Login and Signup/Controller/logout.php">
-                        <button>Logout</button>
-                    </a>
-                </td>
-            </tr>     
         </table>
+    </div>
+
+        </main>
     </div>
 </body>
 </html>

@@ -175,12 +175,12 @@ input[type="submit"]:hover {
     background: var(--primary-hover);
 }
 
-/* Make the red "Remove Product" button consistent even with inline styles */
-input[value="Remove Product"] {
+/* Make the red "Remove Seller" button consistent even with inline styles */
+input[value="Remove Seller"] {
     background: var(--danger) !important;
 }
 
-input[value="Remove Product"]:hover {
+input[value="Remove Seller"]:hover {
     background: var(--danger-hover) !important;
 }
 
@@ -188,23 +188,15 @@ a {
     color: var(--primary);
 }
 
-/* Inventory item wrappers have inline styles; normalize their look */
+/* Cards in Inventory/Seller pages currently have inline styles; normalize their look */
 div[style*="border: 1px solid #000"] {
     border: 1px solid var(--border) !important;
     background: var(--panel);
 }
 
-/* Small images */
 img {
     max-width: 100%;
     height: auto;
-}
-
-/* Slightly nicer preview box */
-#preview img {
-    display: block;
-    margin-top: 10px;
-    border: 1px solid var(--border);
 }
 
 @media (max-width: 900px) {
@@ -216,9 +208,5 @@ img {
 
     .sidebar {
         width: 100%;
-    }
-
-    .main-content {
-        padding: 18px;
     }
 }

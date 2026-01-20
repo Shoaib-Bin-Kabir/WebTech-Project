@@ -32,11 +32,30 @@ unset($_SESSION['addProductErr']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Inventory</title>
+    <link rel="stylesheet" href="../Design/admin.css">
     <script src="../Controller/JS/AddProductJSval.php"></script>
     <script src="../Controller/JS/inventoryEdit.js"></script>
 </head>
 <body>
-    <h1>Manage Inventory - Add Product to Shop</h1>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-placeholder">A</div>
+                <div class="welcome-text">Admin Dashboard</div>
+                <div class="user-email"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></div>
+            </div>
+            <div class="actions-section">
+                <a class="action-btn" href="AHomePage.php">Home</a>
+                <a class="action-btn" href="allHistory.php">History</a>
+                <a class="action-btn" href="ManInventory.php">Manage Inventory</a>
+                <a class="action-btn" href="ManSeller.php">Manage Seller</a>
+                <a class="action-btn" href="profile.php">Profile</a>
+                <a class="action-btn logout" href="../../Login and Signup/Controller/logout.php">Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <h1>Manage Inventory - Add Product to Shop</h1>
     
     <?php if ($addProductSuccess): ?>
         <p style="color: green; font-weight: bold;"><?php echo htmlspecialchars($addProductSuccess); ?></p>
@@ -46,17 +65,7 @@ unset($_SESSION['addProductErr']);
         <p style="color: red; font-weight: bold;"><?php echo htmlspecialchars($addProductErr); ?></p>
     <?php endif; ?>
     
-    <div>
-        <nav>
-            <ul>
-                <li><a href="AHomePage.php">Home Page</a></li>
-                <li><a href="allHistory.php">See History</a></li>
-                <li><a href="profile.php">Profile</a></li>
-                <li><a href="ManSeller.php">Manage Seller</a></li>
-                <li><a href="../../Login and Signup/Controller/logout.php">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
+    
 
     <div>
         <form action="../Controller/AddProductPhpVal.php" method="POST" enctype="multipart/form-data" onsubmit="validateAddProduct(event)">  
@@ -276,5 +285,7 @@ unset($_SESSION['addProductErr']);
     ?>
         <p>No products in inventory.</p>
     <?php endif; ?>
+        </main>
+    </div>
 </body>
 </html>

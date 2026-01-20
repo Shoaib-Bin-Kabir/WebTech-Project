@@ -35,23 +35,30 @@ unset($_SESSION['addSellerErr']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Seller Page</title>
+    <link rel="stylesheet" href="../Design/admin.css">
     <script src="../Controller/JS/addSellJSval.php"></script>
     <script src="../Controller/JS/sellerManage.js"></script>
 </head>
 <body>
-    <h1>Manage Seller Page</h1>
-    <div>
-    <nav>
-        <ul>
-            <li><a href="AHomePage.php">Home Page</a></li>
-            <li><a href="allHistory.php">See History</a></li>
-            <li><a href="ManInventory.php">Manage Inventory</a></li>
-            <li><a href="profile.php">Profile</a></li>
-            <li><a href="../../Login and Signup/Controller/logout.php">Logout</a></li>
-        </ul>
-    </nav>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-placeholder">A</div>
+                <div class="welcome-text">Admin Dashboard</div>
+                <div class="user-email"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></div>
+            </div>
+            <div class="actions-section">
+                <a class="action-btn" href="AHomePage.php">Home</a>
+                <a class="action-btn" href="allHistory.php">History</a>
+                <a class="action-btn" href="ManInventory.php">Manage Inventory</a>
+                <a class="action-btn" href="ManSeller.php">Manage Seller</a>
+                <a class="action-btn" href="profile.php">Profile</a>
+                <a class="action-btn logout" href="../../Login and Signup/Controller/logout.php">Logout</a>
+            </div>
+        </aside>
 
-    </div>
+        <main class="main-content">
+            <h1>Manage Seller</h1>
 
     <div>
           <?php
@@ -167,7 +174,8 @@ unset($_SESSION['addSellerErr']);
     ?>
         <p>No sellers found.</p>
     <?php endif; ?>
-   
+        </main>
+    </div>
 
 </body>
 </html>
