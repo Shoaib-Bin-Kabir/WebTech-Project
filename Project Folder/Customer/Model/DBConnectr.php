@@ -103,6 +103,28 @@ class DBConnectr {
         return $connection->query($sql);
     }
 
+    function decrementProductStock($connection, $productId, $qty) {
+        $productId = (int) $productId;
+        $qty = (int) $qty;
+
+        if ($productId <= 0 || $qty <= 0) {
+            return false;
+        }
+
+        $sql = "UPDATE products SET product_quantity = product_quantity - ? WHERE id = ? AND product_quantity >= ?";
+        $stmt = $connection->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("iii", $qty, $productId, $qty);
+        $ok = $stmt->execute();
+        $affected = $stmt->affected_rows;
+        $stmt->close();
+
+        return $ok && ($affected === 1);
+    }
+
     function getCartItemCount($connection, $customerId) {
         $customerId = (int) $customerId;
      

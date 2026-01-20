@@ -82,6 +82,8 @@ if ($grandTotal < 0) {
 
 $orderGroup = $db->createOrderGroup();
 
+$connection->begin_transaction();
+
 
 foreach ($items as $it) {
     $productId = (int) ($it['product_id'] ?? $it['id'] ?? 0);
@@ -93,8 +95,18 @@ foreach ($items as $it) {
         continue;
     }
 
+    $stockOk = $db->decrementProductStock($connection, $productId, $qty);
+    if (!$stockOk) {
+        $connection->rollback();
+        $db->closeConnection($connection);
+        $_SESSION['orderError'] = 'Not enough stock available for: ' . $name;
+        header('Location: ../View/cart.php');
+        exit();
+    }
+
     $ok = $db->addOrderItemRow($connection, $orderGroup, $customerId, $productId, $name, $price, $qty, $shippingAddress);
     if (!$ok) {
+        $connection->rollback();
         $db->closeConnection($connection);
         $_SESSION['orderError'] = 'Could not create order.';
         header('Location: ../View/payment.php');
@@ -102,8 +114,16 @@ foreach ($items as $it) {
     }
 }
 
+$clearOk = $db->clearCart($connection, $customerId);
+if (!$clearOk) {
+    $connection->rollback();
+    $db->closeConnection($connection);
+    $_SESSION['orderError'] = 'Could not clear cart after payment.';
+    header('Location: ../View/payment.php');
+    exit();
+}
 
-$db->clearCart($connection, $customerId);
+$connection->commit();
 
 $db->closeConnection($connection);
 
