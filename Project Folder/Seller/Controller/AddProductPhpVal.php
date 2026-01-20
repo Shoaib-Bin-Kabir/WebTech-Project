@@ -115,6 +115,16 @@ $photoPath = '/Web_Technologies_Fall_2025-26/WebTech-Project/Project Folder/Prod
 
 $result = $db->insertProduct($connection, $sellerEmail, $productName, $category, $price, $quantity, $photoPath);
 
+if ($result) {
+    $sellerResult = $db->getSellerByEmail($connection, $sellerEmail);
+    $sellerData = $sellerResult->fetch_assoc();
+    $sellerName = $sellerData['Name'] ?? $sellerEmail;
+    
+    $db->insertHistory($connection, $sellerEmail, $sellerName, 'Add', 'Product: ' . $productName, NULL, NULL);
+    
+    $_SESSION['addProductSuccess'] = 'Product added successfully!';
+}
+
 $db->closeConnection($connection);
 
 if ($result) {

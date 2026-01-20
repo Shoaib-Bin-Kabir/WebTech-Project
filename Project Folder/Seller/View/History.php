@@ -1,22 +1,25 @@
 <?php
 session_start();
 
-// Check if user is logged in
 if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
-    // Not logged in, send back to login
     header('Location: ../../Login and Signup/View/login.php');
     exit();
 }
 
-// Check if user is a Seller (not a Customer)
 if ($_SESSION['user_type'] !== 'Seller') {
-    // Customer trying to access seller pages - redirect them
      header('Location: ../../Login and Signup/View/login.php');
     exit();
 }
 
+include "../Model/DBConnectr.php";
+
 $userEmail = $_SESSION['email'];
 $userType = $_SESSION['user_type'];
+
+$db = new DBConnectr();
+$connection = $db->openConnection();
+$historyResult = $db->getHistoryByEmail($connection, $userEmail);
+$db->closeConnection($connection);
 ?>
 
 <!DOCTYPE html>
@@ -25,30 +28,59 @@ $userType = $_SESSION['user_type'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller History</title>
-    <link rel="stylesheet" href="Design/seller.css">
 </head>
 <body>
-    <div class="container">
-        <aside class="sidebar">
-            <div class="profile-section">
-                <div class="profile-placeholder">S</div>
-                <div class="welcome-text">Seller Dashboard</div>
-                <div class="user-email"><?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?></div>
-            </div>
-            <div class="actions-section">
-                <a class="action-btn" href="SHomePage.php">Home</a>
-                <a class="action-btn" href="addProduct.php">Add Product</a>
-                <a class="action-btn" href="editInventory.php">Edit Inventory</a>
-                <a class="action-btn" href="History.php">History</a>
-                <a class="action-btn" href="profile.php">Profile</a>
-                <a class="action-btn logout" href="../../Login and Signup/Controller/logout.php">Logout</a>
-            </div>
-        </aside>
+    <h1>My Action History</h1>
+    
+    <div>
+        <nav>
+            <ul>
+                <li><a href="SHomePage.php">Home Page</a></li>
+                <li><a href="addProduct.php">Add Product</a></li>
+                <li><a href="editInventory.php">Edit Inventory</a></li>
+                <li><a href="profile.php">Profile</a></li>
+                <li><a href="../../Login and Signup/Controller/logout.php">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
 
-        <main class="main-content">
-            <h1>History</h1>
-            <p>Future Edits Seller Product Update History</p>
-        </main>
+    <div>
+        <?php if ($historyResult->num_rows > 0): ?>
+            <table border="1" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                        <th>Change</th>
+                        <th>Value</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($history = $historyResult->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($history['id']); ?></td>
+                            <td><?php echo htmlspecialchars($history['user_name'] ?? $history['user_email']); ?></td>
+                            <td><?php echo htmlspecialchars($history['action_type']); ?></td>
+                            <td><?php echo htmlspecialchars($history['target']); ?></td>
+                            <td>
+                                <?php 
+                                if ($history['old_value'] !== NULL && $history['new_value'] !== NULL) {
+                                    echo 'From ' . htmlspecialchars($history['old_value']) . ' to ' . htmlspecialchars($history['new_value']);
+                                } else {
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($history['created_at']); ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>No history found. Your actions will appear here.</p>
+        <?php endif; ?>
     </div>
 </body>
 </html>
