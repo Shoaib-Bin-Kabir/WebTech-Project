@@ -39,6 +39,9 @@ if ($updateType === 'name') {
     } else {
         $success = $db->updateSellerName($connection, $sellerEmail, $newName);
     }
+    if ($success) {
+    $db->insertHistory($connection, $sellerEmail, $sellerData['Name'], 'Update', 'Profile Name', $sellerData['Name'], $newName);
+}
 } 
 elseif ($updateType === 'nid') {
     $newNID = $_POST['nid'] ?? '';
@@ -52,6 +55,9 @@ elseif ($updateType === 'nid') {
         $error = 'NID cannot be greater than 10 digits';
     } else {
         $success = $db->updateSellerNID($connection, $sellerEmail, $newNID);
+    }
+    if ($success) {
+    $db->insertHistory($connection, $sellerEmail, $sellerData['Name'], 'Update', 'Profile NID', $sellerData['NID'], $newNID);
     }
 } 
 elseif ($updateType === 'email') {
@@ -68,6 +74,9 @@ elseif ($updateType === 'email') {
             $_SESSION['email'] = $newEmail;
         }
     }
+    if ($success) {
+    $db->insertHistory($connection, $sellerEmail, $sellerData['Name'], 'Update', 'Profile Email', $sellerEmail, $newEmail);
+    }
 } 
 elseif ($updateType === 'phone') {
     $newPhone = $_POST['phone'] ?? '';
@@ -83,6 +92,9 @@ elseif ($updateType === 'phone') {
         $error = 'Phone number must start with 013, 014, 015, 016, 017, 018, or 019';
     } else {
         $success = $db->updateSellerPhone($connection, $sellerEmail, $newPhone);
+    }
+    if ($success) {
+    $db->insertHistory($connection, $sellerEmail, $sellerData['Name'], 'Update', 'Profile Phone', $sellerData['Phone_Number'], $newPhone);
     }
 } 
 elseif ($updateType === 'photo') {
@@ -112,6 +124,9 @@ elseif ($updateType === 'photo') {
         }
     } else {
         $error = 'Please select a photo to upload';
+    }
+    if ($success) {
+    $db->insertHistory($connection, $sellerEmail, $sellerData['Name'], 'Update', 'Profile Photo', NULL, NULL);
     }
 }
 

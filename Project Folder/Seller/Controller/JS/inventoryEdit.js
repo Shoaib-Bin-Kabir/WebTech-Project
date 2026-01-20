@@ -43,13 +43,13 @@ function toggleEdit(fieldName, productId) {
     const btnElement = document.getElementById(btnId);
     
     if (editingField === null) {
-        // Switch to edit mode
+       
         displayElement.style.display = 'none';
         formElement.style.display = 'inline';
         btnElement.value = 'Save';
         editingField = fieldKey;
     } else {
-        // Validate and submit
+        
         const inputElement = formElement.querySelector('input[type="number"], input[type="text"]');
         const value = inputElement.value.trim();
         let errorMessage = '';

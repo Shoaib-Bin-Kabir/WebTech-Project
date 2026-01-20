@@ -115,6 +115,16 @@ $photoPath = 'Product Photos/' . $fileName;
 
 $result = $db->insertProduct($connection, $sellerEmail, $productName, $category, $price, $quantity, $photoPath);
 
+if ($result) {
+    $sellerResult = $db->getSellerByEmail($connection, $sellerEmail);
+    $sellerData = $sellerResult->fetch_assoc();
+    $sellerName = $sellerData['Name'] ?? $sellerEmail;
+    
+    $db->insertHistory($connection, $sellerEmail, $sellerName, 'Add', 'Product: ' . $productName, NULL, NULL);
+    
+    $_SESSION['addProductSuccess'] = 'Product added successfully!';
+}
+
 $db->closeConnection($connection);
 
 if ($result) {

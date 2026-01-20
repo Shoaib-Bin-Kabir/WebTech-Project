@@ -100,7 +100,7 @@ function getAllProducts($connection) {
     return $result;
 }
 
-// Update product quantity (without seller check)
+
 function updateProductQuantityAll($connection, $productId, $newQuantity) {
     $sql = "UPDATE products SET product_quantity = ? WHERE id = ?";
     $stmt = $connection->prepare($sql);
@@ -110,7 +110,7 @@ function updateProductQuantityAll($connection, $productId, $newQuantity) {
     return $result;
 }
 
-// Update product price (without seller check)
+
 function updateProductPriceAll($connection, $productId, $newPrice) {
     $sql = "UPDATE products SET product_price = ? WHERE id = ?";
     $stmt = $connection->prepare($sql);
@@ -120,7 +120,7 @@ function updateProductPriceAll($connection, $productId, $newPrice) {
     return $result;
 }
 
-// Update product photo (without seller check)
+
 function updateProductPhotoAll($connection, $productId, $newPhotoPath) {
     $sql = "UPDATE products SET product_photo = ? WHERE id = ?";
     $stmt = $connection->prepare($sql);
@@ -130,7 +130,7 @@ function updateProductPhotoAll($connection, $productId, $newPhotoPath) {
     return $result;
 }
 
-// Get product by ID only (without seller check)
+
 function getProductByIdOnly($connection, $productId) {
     $sql = "SELECT * FROM products WHERE id = ?";
     $stmt = $connection->prepare($sql);
@@ -140,7 +140,7 @@ function getProductByIdOnly($connection, $productId) {
     return $result;
 }
 
-// Delete product (without seller check)
+
 function deleteProductAll($connection, $productId) {
     $sql = "DELETE FROM products WHERE id = ?";
     $stmt = $connection->prepare($sql);
@@ -149,5 +149,24 @@ function deleteProductAll($connection, $productId) {
     $stmt->close();
     return $result;
 }
+
+function insertHistory($connection, $userEmail, $userName, $actionType, $target, $oldValue, $newValue) {
+    $sql = "INSERT INTO history (user_email, user_name, action_type, target, old_value, new_value) 
+            VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("ssssss", $userEmail, $userName, $actionType, $target, $oldValue, $newValue);
+    $result = $stmt->execute();
+    return $result;
+}
+
+function getHistoryByEmail($connection, $email) {
+    $sql = "SELECT * FROM history WHERE user_email = ? ORDER BY created_at DESC";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result;
+}
+
 }
 ?>

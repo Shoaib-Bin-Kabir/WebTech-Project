@@ -22,7 +22,7 @@ $success = false;
 $db = new DBConnectr();
 $connection = $db->openConnection();
 
-// Verify product exists
+
 $productCheck = $db->getProductByIdOnly($connection, $productId);
 
 if ($productCheck->num_rows == 0) {
@@ -30,7 +30,7 @@ if ($productCheck->num_rows == 0) {
 } else {
     $productData = $productCheck->fetch_assoc();
     
-    // Handle Quantity Update
+   
     if ($updateType === 'quantity') {
         $newQuantity = $_POST['quantity'] ?? '';
         
@@ -45,12 +45,19 @@ if ($productCheck->num_rows == 0) {
         } else {
             $success = $db->updateProductQuantityAll($connection, $productId, $newQuantity);
             if ($success) {
-                $_SESSION['inventorySuccess'] = 'Quantity updated successfully';
+             $sellerResult = $db->getSellerByEmail($connection, $_SESSION['email']);
+             $sellerData = $sellerResult->fetch_assoc();
+             $sellerName = $sellerData['Name'] ?? $_SESSION['email'];
+    
+             $target = 'Product ' . $productId . ' Quantity';
+             $db->insertHistory($connection, $_SESSION['email'], $sellerName, 'Update', $target, $productData['product_quantity'], $newQuantity);
+    
+             $_SESSION['inventorySuccess'] = 'Quantity updated successfully';
             }
         }
     }
     
-    // Handle Price Update
+ 
     elseif ($updateType === 'price') {
         $newPrice = $_POST['price'] ?? '';
         
@@ -63,12 +70,19 @@ if ($productCheck->num_rows == 0) {
         } else {
             $success = $db->updateProductPriceAll($connection, $productId, $newPrice);
             if ($success) {
-                $_SESSION['inventorySuccess'] = 'Price updated successfully';
+             $sellerResult = $db->getSellerByEmail($connection, $_SESSION['email']);
+             $sellerData = $sellerResult->fetch_assoc();
+             $sellerName = $sellerData['Name'] ?? $_SESSION['email'];
+    
+             $target = 'Product ' . $productId . ' Price';
+             $db->insertHistory($connection, $_SESSION['email'], $sellerName, 'Update', $target, $productData['product_price'], $newPrice);
+    
+             $_SESSION['inventorySuccess'] = 'Price updated successfully';
             }
         }
     }
     
-    // Handle Photo Update
+  
     elseif ($updateType === 'photo') {
         $uploadFile = $_FILES['productPhoto'] ?? null;
         
@@ -77,13 +91,13 @@ if ($productCheck->num_rows == 0) {
             $fileType = $uploadFile['type'];
             
             if (in_array($fileType, $allowedTypes)) {
-                // Delete old photo if exists
+              
                 $oldPhotoPath = "../../" . $productData['product_photo'];
                 if (!empty($productData['product_photo']) && file_exists($oldPhotoPath)) {
                     unlink($oldPhotoPath);
                 }
                 
-                // Save new photo
+              
                 $fileExtension = pathinfo($uploadFile['name'], PATHINFO_EXTENSION);
                 $newFileName = $productId . "_" . time() . "." . $fileExtension;
                 $targetDir = "../../Product Photos/";
@@ -98,8 +112,15 @@ if ($productCheck->num_rows == 0) {
                     $dbPath = "Product Photos/" . $newFileName;
                     $success = $db->updateProductPhotoAll($connection, $productId, $dbPath);
                     if ($success) {
-                        $_SESSION['inventorySuccess'] = 'Photo updated successfully';
-                    }
+                      $sellerResult = $db->getSellerByEmail($connection, $_SESSION['email']);
+                      $sellerData = $sellerResult->fetch_assoc();
+                      $sellerName = $sellerData['Name'] ?? $_SESSION['email'];
+    
+                     $target = 'Product ' . $productId . ' Photo';
+                     $db->insertHistory($connection, $_SESSION['email'], $sellerName, 'Update', $target, NULL, NULL);
+    
+                     $_SESSION['inventorySuccess'] = 'Photo updated successfully';
+                   }
                 } else {
                     $error = 'Failed to upload photo';
                 }
@@ -111,27 +132,32 @@ if ($productCheck->num_rows == 0) {
         }
     }
     
-    // Handle Delete Product
+ 
     elseif ($updateType === 'delete') {
-        // Delete photo file first
+   
         $photoPath = "../../" . $productData['product_photo'];
         if (!empty($productData['product_photo']) && file_exists($photoPath)) {
             unlink($photoPath);
         }
-        
-        // Delete from database
-        $success = $db->deleteProductAll($connection, $productId);
-        if ($success) {
-            $_SESSION['inventorySuccess'] = 'Product deleted successfully';
+               $success = $db->deleteProductAll($connection, $productId);
+         if ($success) {
+                  $sellerResult = $db->getSellerByEmail($connection, $_SESSION['email']);
+                  $sellerData = $sellerResult->fetch_assoc();
+                  $sellerName = $sellerData['Name'] ?? $_SESSION['email'];
+    
+                 $target = 'Product: ' . $productData['product_name'];
+                 $db->insertHistory($connection, $_SESSION['email'], $sellerName, 'Delete', $target, NULL, NULL);
+    
+                 $_SESSION['inventorySuccess'] = 'Product deleted successfully';
         } else {
-            $error = 'Failed to delete product';
-        }
+               $error = 'Failed to delete product';
+            }
     }
 }
 
 $db->closeConnection($connection);
 
-// Store error message in session
+
 if (!empty($error)) {
     $_SESSION['inventoryError'] = $error;
 }
