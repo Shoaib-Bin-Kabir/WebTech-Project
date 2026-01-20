@@ -105,7 +105,11 @@ class DBConnectr {
 
     function getCartItemCount($connection, $customerId) {
         $customerId = (int) $customerId;
-        $sql = "SELECT COALESCE(SUM(quantity), 0) AS cnt FROM customer_cart_items WHERE customer_id = " . $customerId;
+     
+        $sql = "SELECT COALESCE(SUM(c.quantity), 0) AS cnt " .
+            "FROM customer_cart_items c " .
+            "INNER JOIN products p ON p.id = c.product_id " .
+            "WHERE c.customer_id = " . $customerId;
         $res = $connection->query($sql);
         if ($res && ($row = $res->fetch_assoc())) {
             return (int) ($row['cnt'] ?? 0);

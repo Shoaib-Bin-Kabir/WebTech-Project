@@ -142,6 +142,15 @@ function getProductByIdOnly($connection, $productId) {
 
 
 function deleteProductAll($connection, $productId) {
+    $productId = (int) $productId;
+
+    // Remove from all customer carts first (avoid orphan cart rows).
+    $sqlCart = "DELETE FROM customer_cart_items WHERE product_id = ?";
+    $stmtCart = $connection->prepare($sqlCart);
+    $stmtCart->bind_param("i", $productId);
+    $stmtCart->execute();
+    $stmtCart->close();
+
     $sql = "DELETE FROM products WHERE id = ?";
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("i", $productId);
