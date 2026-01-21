@@ -31,6 +31,7 @@ $db->closeConnection($connection);
     <title>Edit Inventory</title>
     <link rel="stylesheet" href="Design/seller.css">
     <script src="../Controller/JS/inventoryEdit.js"></script>
+    <script src="../Controller/JS/filterInventory.js"></script>
 </head>
 <body>
     <div class="container">
@@ -52,8 +53,57 @@ $db->closeConnection($connection);
 
         <main class="main-content">
             <h1>Edit Inventory</h1>
+            
+            <!-- Filter and Sort Controls -->
+            <div style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border: 1px solid #ddd;">
+                <table>
+                    <tr>
+                        <td style="padding-right: 20px;">
+                            <label for="sortBy"><strong>Sort By:</strong></label>
+                            <select id="sortBy" name="sortBy" onchange="filterInventory()" style="padding: 5px; margin-left: 10px;">
+                                <option value="">-- Default --</option>
+                                <option value="price_high">Price: High to Low</option>
+                                <option value="price_low">Price: Low to High</option>
+                                <option value="quantity_high">Quantity: High to Low</option>
+                                <option value="quantity_low">Quantity: Low to High</option>
+                            </select>
+                        </td>
+                        <td>
+                            <label for="categoryFilter"><strong>Category:</strong></label>
+                            <select id="categoryFilter" name="categoryFilter" onchange="filterInventory()" style="padding: 5px; margin-left: 10px;">
+                                <option value="">-- All Categories --</option>
+                                <optgroup label="Women's Bags">
+                                    <option value="Women's Handbag">Women's Handbag</option>
+                                    <option value="Women's Shoulder Bag">Women's Shoulder Bag</option>
+                                    <option value="Women's Crossbody Bag">Women's Crossbody Bag</option>
+                                    <option value="Women's Tote Bag">Women's Tote Bag</option>
+                                    <option value="Women's Satchel">Women's Satchel</option>
+                                    <option value="Women's Clutch">Women's Clutch</option>
+                                    <option value="Women's Evening Bag">Women's Evening Bag</option>
+                                    <option value="Women's Backpack">Women's Backpack</option>
+                                    <option value="Women's Bucket Bag">Women's Bucket Bag</option>
+                                    <option value="Women's Belt Bag">Women's Belt Bag (Fanny Pack)</option>
+                                    <option value="Women's Hobo Bag">Women's Hobo Bag</option>
+                                    <option value="Women's Frame Bag">Women's Frame Bag</option>
+                                </optgroup>
+                                <optgroup label="Men's Bags">
+                                    <option value="Men's Messenger Bag">Men's Messenger Bag</option>
+                                    <option value="Men's Laptop Bag">Men's Laptop Bag</option>
+                                    <option value="Men's Backpack">Men's Backpack</option>
+                                </optgroup>
+                                <optgroup label="Unisex">
+                                    <option value="Travel Bag">Travel Bag</option>
+                                    <option value="Gym Bag">Gym Bag</option>
+                                    <option value="Duffel Bag">Duffel Bag</option>
+                                </optgroup>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
             <?php
-            // Display error or success messages
+        
             if (isset($_SESSION['inventoryError'])) {
                 echo '<p style="color: red; font-weight: bold;">' . htmlspecialchars($_SESSION['inventoryError']) . '</p>';
                 unset($_SESSION['inventoryError']);
@@ -64,7 +114,8 @@ $db->closeConnection($connection);
             }
             ?>
 
-            <div>
+            <!-- Products Container -->
+            <div id="productsContainer">
         <?php if ($products->num_rows > 0): ?>
             <?php while ($product = $products->fetch_assoc()): ?>
                 <div style="border: 1px solid #000; padding: 15px; margin: 10px 0;">
@@ -207,6 +258,7 @@ $db->closeConnection($connection);
         <?php else: ?>
             <p>No products found. <a href="addProduct.php">Add your first product</a></p>
         <?php endif; ?>
+            </div>
             </div>
         </main>
     </div>
