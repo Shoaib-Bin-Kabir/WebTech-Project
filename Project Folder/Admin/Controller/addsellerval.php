@@ -2,6 +2,11 @@
 
 session_start();
 
+if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || ($_SESSION['user_type'] ?? '') !== 'Admin') {
+    header('Location: ../../Login and Signup/View/login.php');
+    exit();
+}
+
 include "../Model/DBConnectr.php";
 
 error_reporting(E_ALL);
@@ -45,6 +50,14 @@ if (!empty($errors)) {
 $db = new DBConnectr();
 $connection = $db->openConnection();   
 
+$adminEmail = $_SESSION['email'] ?? '';
+$adminName = 'Admin';
+$adminResult = $db->getAdminByEmail($connection, $adminEmail);
+if ($adminResult && $adminResult->num_rows > 0) {
+    $adminRow = $adminResult->fetch_assoc();
+    $adminName = $adminRow['Name'] ?? $adminName;
+}
+
 $existingSeller = $db->checkEmailExists($connection, $semail);
 
 if($existingSeller->num_rows > 0){
@@ -65,6 +78,7 @@ if ($loginResult) {
     $sellerResult = $db->insertSeller($connection, $sellerId, $semail, $spassword);
     
     if ($sellerResult) {
+        $db->insertHistory($connection, $adminEmail, $adminName, 'Add', 'Seller: ' . $semail, NULL, NULL);
         $_SESSION['addSellerSuccess'] = 'Seller added successfully!';
         unset($_SESSION['previousValues']);
         header('Location: ../View/ManSeller.php');

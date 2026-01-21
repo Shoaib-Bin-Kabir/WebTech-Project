@@ -23,6 +23,8 @@ $result = $db->getAdminByEmail($connection, $adminEmail);
 $adminData = $result->fetch_assoc();
 $adminId = $adminData['ID'];
 
+$adminNameForHistory = $adminData['Name'] ?? 'Admin';
+
 $success = false;
 $error = '';
 
@@ -38,6 +40,9 @@ if ($updateType === 'name') {
         $error = 'Name can only contain letters and spaces';
     } else {
         $success = $db->updateAdminName($connection, $adminEmail, $newName);
+        if ($success) {
+            $db->insertHistory($connection, $adminEmail, $adminNameForHistory, 'Update', 'Profile Name', $adminData['Name'] ?? NULL, $newName);
+        }
     }
 } 
 elseif ($updateType === 'nid') {
@@ -52,6 +57,9 @@ elseif ($updateType === 'nid') {
         $error = 'NID cannot be greater than 10 digits';
     } else {
         $success = $db->updateAdminNID($connection, $adminEmail, $newNID);
+        if ($success) {
+            $db->insertHistory($connection, $adminEmail, $adminNameForHistory, 'Update', 'Profile NID', $adminData['NID'] ?? NULL, $newNID);
+        }
     }
 } 
 elseif ($updateType === 'email') {
@@ -65,6 +73,7 @@ elseif ($updateType === 'email') {
     } else {
         $success = $db->updateAdminEmail($connection, $adminEmail, $newEmail);
         if ($success) {
+            $db->insertHistory($connection, $adminEmail, $adminNameForHistory, 'Update', 'Profile Email', $adminEmail, $newEmail);
             $_SESSION['email'] = $newEmail;
         }
     }
@@ -83,35 +92,82 @@ elseif ($updateType === 'phone') {
         $error = 'Phone number must start with 013, 014, 015, 016, 017, 018, or 019';
     } else {
         $success = $db->updateAdminPhone($connection, $adminEmail, $newPhone);
+        if ($success) {
+            $db->insertHistory($connection, $adminEmail, $adminNameForHistory, 'Update', 'Profile Phone', $adminData['Phone_Number'] ?? NULL, $newPhone);
+        }
     }
 } 
 elseif ($updateType === 'photo') {
     $uploadFile = $_FILES['photo'] ?? null;
-    
-    if ($uploadFile && $uploadFile['size'] > 0) {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $fileType = $uploadFile['type'];
-        
-        if (in_array($fileType, $allowedTypes)) {
-            $fileExtension = pathinfo($uploadFile['name'], PATHINFO_EXTENSION);
-            $newFileName = $adminId . "." . $fileExtension;
-            $targetDir = "../Admin Photo/";
-            
-            if (!file_exists($targetDir)) {
-                mkdir($targetDir, 0777, true);
-            }
-            
-            $targetPath = $targetDir . $newFileName;
-            
-            if (move_uploaded_file($uploadFile['tmp_name'], $targetPath)) {
-                $dbPath = "Admin Photo/" . $newFileName;
-                $success = $db->updateAdminPhoto($connection, $adminEmail, $dbPath);
-            }
-        } else {
-            $error = 'Invalid file type. Only JPEG, PNG, and GIF are allowed';
-        }
-    } else {
+
+    if (!$uploadFile) {
         $error = 'Please select a photo to upload';
+    } elseif (($uploadFile['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        $uploadError = $uploadFile['error'] ?? UPLOAD_ERR_NO_FILE;
+        if ($uploadError === UPLOAD_ERR_INI_SIZE || $uploadError === UPLOAD_ERR_FORM_SIZE) {
+            $error = 'Photo is too large to upload';
+        } else {
+            $error = 'Upload failed. Please try again';
+        }
+    } elseif (($uploadFile['size'] ?? 0) <= 0) {
+        $error = 'Please select a photo to upload';
+    } elseif (($uploadFile['size'] ?? 0) > (5 * 1024 * 1024)) {
+        $error = 'Photo size must be 5MB or less';
+    } else {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+        $finfo = function_exists('finfo_open') ? finfo_open(FILEINFO_MIME_TYPE) : null;
+        $detectedType = $finfo ? finfo_file($finfo, $uploadFile['tmp_name']) : ($uploadFile['type'] ?? '');
+        if ($finfo) {
+            finfo_close($finfo);
+        }
+
+        if (!in_array($detectedType, $allowedTypes, true)) {
+            $error = 'Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed';
+        } else {
+            $fileExtension = strtolower(pathinfo($uploadFile['name'], PATHINFO_EXTENSION));
+            if ($fileExtension === '' || $fileExtension === 'jpeg') {
+                $fileExtension = 'jpg';
+            }
+            if ($detectedType === 'image/webp') {
+                $fileExtension = 'webp';
+            } elseif ($detectedType === 'image/png') {
+                $fileExtension = 'png';
+            } elseif ($detectedType === 'image/gif') {
+                $fileExtension = 'gif';
+            } elseif ($detectedType === 'image/jpeg') {
+                $fileExtension = 'jpg';
+            }
+
+            $newFileName = $adminId . "." . $fileExtension;
+            $targetDirFs = __DIR__ . "/../Admin Photo/";
+
+            if (!is_dir($targetDirFs)) {
+                if (!mkdir($targetDirFs, 0777, true)) {
+                    $error = 'Server error: cannot create upload folder';
+                }
+            }
+
+            if (empty($error) && !is_writable($targetDirFs)) {
+                $error = 'Server error: upload folder is not writable';
+            }
+
+            if (empty($error)) {
+                $targetPathFs = $targetDirFs . $newFileName;
+
+                if (!move_uploaded_file($uploadFile['tmp_name'], $targetPathFs)) {
+                    $error = 'Server error: failed to save uploaded photo';
+                } else {
+                    $dbPath = "Admin Photo/" . $newFileName;
+                    $success = $db->updateAdminPhoto($connection, $adminEmail, $dbPath);
+                    if (!$success) {
+                        $error = 'Server error: failed to update photo in database';
+                    } else {
+                        $db->insertHistory($connection, $adminEmail, $adminNameForHistory, 'Update', 'Profile Photo', $adminData['Photo'] ?? NULL, $dbPath);
+                    }
+                }
+            }
+        }
     }
 }
 

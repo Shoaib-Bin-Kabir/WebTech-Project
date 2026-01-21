@@ -13,6 +13,14 @@ $sellerEmail = $_POST['sellerEmail'];
 $db = new DBConnectr();
 $connection = $db->openConnection();
 
+$adminEmail = $_SESSION['email'] ?? '';
+$adminName = 'Admin';
+$adminResult = $db->getAdminByEmail($connection, $adminEmail);
+if ($adminResult && $adminResult->num_rows > 0) {
+    $adminRow = $adminResult->fetch_assoc();
+    $adminName = $adminRow['Name'] ?? $adminName;
+}
+
 $sellerCheck = $db->getSellerByEmail($connection, $sellerEmail);
 
 if ($sellerCheck->num_rows == 0) {
@@ -32,6 +40,7 @@ $result1 = $db->deleteSellerFromSeller($connection, $sellerEmail);
 $result2 = $db->deleteSellerFromLogin($connection, $sellerEmail);
 
 if ($result1 && $result2) {
+    $db->insertHistory($connection, $adminEmail, $adminName, 'Delete', 'Seller: ' . $sellerEmail, NULL, NULL);
     $_SESSION['sellerSuccess'] = 'Seller removed successfully';
 } else {
     $_SESSION['sellerError'] = 'Failed to remove seller';

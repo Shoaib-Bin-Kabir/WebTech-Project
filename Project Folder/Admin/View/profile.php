@@ -84,8 +84,13 @@ $db->closeConnection($connection);
             <tr>
                 <td>
                     <div id="photoDisplay">
-                        <?php if (!empty($adminPhoto) && file_exists("../" . $adminPhoto)): ?>
-                            <img src="<?php echo htmlspecialchars("../" . $adminPhoto); ?>" 
+                        <?php
+                        $adminPhotoRelativeUrl = "../" . ltrim((string)$adminPhoto, '/');
+                        $adminPhotoFsPath = __DIR__ . "/../" . ltrim((string)$adminPhoto, '/');
+                        $adminPhotoVersion = (is_file($adminPhotoFsPath) ? (string)@filemtime($adminPhotoFsPath) : "");
+                        ?>
+                        <?php if (!empty($adminPhoto) && is_file($adminPhotoFsPath)): ?>
+                            <img src="<?php echo htmlspecialchars($adminPhotoRelativeUrl . ($adminPhotoVersion !== "" ? ("?v=" . $adminPhotoVersion) : "")); ?>" 
                                  alt="Profile Photo" 
                                  width="150" 
                                  height="150">
