@@ -33,6 +33,7 @@ $db->closeConnection($connection);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>History</title>
     <link rel="stylesheet" href="../Design/admin.css">
+    <script src="../Controller/JS/searchHistory.js"></script>
 </head>
 <body>
     <div class="container">
@@ -55,6 +56,20 @@ $db->closeConnection($connection);
         <main class="main-content">
             <h1>All User History</h1>
 
+          
+            <div style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border: 1px solid #ddd;">
+                <label for="searchSeller"><strong>Search by Name:</strong></label>
+                <input type="text" 
+                       id="searchSeller" 
+                       name="searchSeller" 
+                       placeholder="Type name..." 
+                       onkeyup="searchHistory()" 
+                       style="padding: 8px; margin-left: 10px; width: 300px; border: 1px solid #ccc; border-radius: 4px;">
+                <span id="searchStatus" style="margin-left: 10px; color: #666; font-size: 14px;"></span>
+            </div>
+
+           
+            <div id="historyContainer">
             <?php if ($historyResult->num_rows > 0): ?>
                 <table class="history-table">
                     <thead>
@@ -93,6 +108,7 @@ $db->closeConnection($connection);
             <?php else: ?>
                 <p class="no-history">No history found.</p>
             <?php endif; ?>
+            </div>
 
             <button class="action-btn" id="toggleHistoryBtn" onclick="toggleHistory()" style="width: 150px;">Hide History</button>
 
