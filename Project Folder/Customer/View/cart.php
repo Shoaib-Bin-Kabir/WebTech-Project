@@ -1,15 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
-    header('Location: ../../Login and Signup/View/login.php');
-    exit();
-}
-
-if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'Customer') {
-    header('Location: ../../Login and Signup/View/login.php');
-    exit();
-}
+require_once __DIR__ . '/../Controller/customer_auth.php';
 
 
 include "../Model/DBConnectr.php";

@@ -84,17 +84,20 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE)
         } elseif ($fileSize > 5242880) {
             $errors['photo'] = 'File size must be less than 5MB';
         } else {
-            $uploadDir = '../Uploads/';
-            if (!file_exists($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-            
             $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
             $fileName = 'customer_' . time() . '_' . uniqid() . '.' . $extension;
-            $uploadPath = $uploadDir . $fileName;
-            
+
+            // Save customer profile photos under Customer/Uploads so Customer dashboard can display them.
+            $customerUploadsDir = __DIR__ . '/../../Customer/Uploads/';
+            if (!file_exists($customerUploadsDir)) {
+                mkdir($customerUploadsDir, 0777, true);
+            }
+
+            $uploadPath = $customerUploadsDir . $fileName;
+
             if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploadPath)) {
-                $photoPath = $uploadPath;
+                // Path stored in DB is used by Customer views (relative to Customer/View).
+                $photoPath = '../Uploads/' . $fileName;
             } else {
                 $errors['photo'] = 'Failed to upload photo';
             }

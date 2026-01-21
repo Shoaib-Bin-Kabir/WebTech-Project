@@ -1,13 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn']) {
-    exit();
-}
-
-if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'Customer') {
-    exit();
-}
+require_once __DIR__ . '/customer_auth.php';
 
 include "../Model/DBConnectr.php";
 

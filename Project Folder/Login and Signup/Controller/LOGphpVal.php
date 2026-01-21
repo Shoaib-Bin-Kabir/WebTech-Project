@@ -49,6 +49,16 @@ if ($result->num_rows > 0) {
    $db->closeConnection($connection);
 
     if ($userType === 'Customer') {
+        $cookieName = 'customer_auth';
+        $maxAgeSeconds = 30 * 24 * 60 * 60; // 30 days
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        setcookie($cookieName, '1', [
+            'expires'  => time() + $maxAgeSeconds,
+            'path'     => '/',
+            'secure'   => $isHttps,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
         header('Location: ../../Customer/View/dashboard.php');
         exit();
     
